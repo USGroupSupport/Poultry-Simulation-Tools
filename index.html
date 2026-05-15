@@ -1,0 +1,1897 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Unitek Solusi — ERP Poultry Simulator</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    /* Brand */
+    --brand-charcoal: #333233;
+    --brand-blue: #28ABE7;
+
+    /* Blue ramp */
+    --blue-50: #E8F6FD; --blue-100: #C5E8F9; --blue-200: #8FD4F2;
+    --blue-300: #5ABFEC; --blue-400: #28ABE7; --blue-500: #1794D0;
+    --blue-600: #0E7AAE; --blue-700: #0A5F87; --blue-800: #074763; --blue-900: #052F41;
+
+    /* Ink ramp */
+    --paper: #FFFFFF;
+    --ink-50: #F8F8F9; --ink-100: #F2F2F3; --ink-200: #E6E5E6;
+    --ink-300: #D4D3D4; --ink-400: #B4B3B4; --ink-500: #8C8B8C;
+    --ink-600: #6B6A6B; --ink-700: #4A494A; --ink-800: #333233;
+    --ink-900: #262526; --ink-950: #1A1A1B;
+
+    /* Semantic */
+    --fg-1: var(--ink-900); --fg-2: var(--ink-700); --fg-3: var(--ink-500);
+    --bg-1: var(--paper); --bg-2: var(--ink-50); --bg-3: var(--ink-100);
+    --border-1: var(--ink-200); --border-2: var(--ink-300);
+
+    /* State */
+    --success: #16A34A; --success-bg: #ECFDF3;
+    --warning: #F59E0B; --warning-bg: #FEF5E7;
+    --danger:  #DC2626; --danger-bg:  #FEECEC;
+
+    /* Shadows */
+    --shadow-xs: 0 1px 2px rgba(26,26,27,0.04);
+    --shadow-sm: 0 2px 6px rgba(26,26,27,0.06);
+    --shadow-md: 0 8px 24px rgba(26,26,27,0.08);
+    --shadow-lg: 0 18px 40px rgba(26,26,27,0.10);
+    --shadow-brand: 0 12px 28px rgba(40,171,231,0.28);
+
+    /* Radii */
+    --radius-xs: 4px; --radius-sm: 6px; --radius-md: 10px;
+    --radius-lg: 16px; --radius-xl: 24px; --radius-pill: 999px;
+
+    /* Spacing */
+    --space-1: 4px; --space-2: 8px; --space-3: 12px; --space-4: 16px;
+    --space-5: 24px; --space-6: 32px; --space-7: 48px; --space-8: 64px; --space-9: 96px;
+
+    /* Type */
+    --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    --font-mono: 'JetBrains Mono', ui-monospace, Menlo, Consolas, monospace;
+
+    /* Motion */
+    --ease-standard: cubic-bezier(0.2, 0.6, 0.2, 1);
+    --ease-emphasis: cubic-bezier(0.16, 0.84, 0.3, 1);
+    --dur-fast: 120ms; --dur-base: 200ms; --dur-slow: 320ms;
+  }
+
+  html { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+  body {
+    font-family: var(--font-sans);
+    background: var(--bg-1);
+    color: var(--fg-1);
+    font-size: 16px;
+    line-height: 1.5;
+    min-height: 100vh;
+  }
+
+  h1, h2, h3, h4 { text-wrap: balance; }
+  p { text-wrap: pretty; }
+
+  /* ── Header ── */
+  .header {
+    background: var(--ink-50);
+    color: var(--fg-1);
+    padding: var(--space-9) var(--space-6) var(--space-8);
+    border-bottom: 1px solid var(--border-1);
+  }
+  .header-inner { max-width: 1200px; margin: 0 auto; }
+
+  .wordmark {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-4);
+    margin-bottom: var(--space-7);
+  }
+  .wordmark-logo {
+    height: 36px;
+    width: auto;
+    display: block;
+  }
+  .wordmark-tag {
+    padding-left: var(--space-4);
+    border-left: 1px solid var(--border-2);
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--fg-3);
+    letter-spacing: 0.04em;
+    line-height: 1.3;
+  }
+
+  .eyebrow {
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--brand-blue);
+    margin-bottom: var(--space-4);
+    display: block;
+  }
+  .header h1 {
+    font-size: clamp(36px, 5vw, 56px);
+    font-weight: 800;
+    letter-spacing: -0.025em;
+    line-height: 1.05;
+    color: var(--fg-1);
+    margin-bottom: var(--space-5);
+    max-width: 720px;
+  }
+  .header h1 .accent { color: var(--brand-blue); }
+  .header-lede {
+    font-size: 18px;
+    color: var(--fg-2);
+    max-width: 600px;
+    line-height: 1.55;
+  }
+
+  /* ── Container ── */
+  .container { max-width: 1200px; margin: 0 auto; padding: var(--space-7) var(--space-6) var(--space-9); }
+
+  /* ── Tab nav (signature underline) ── */
+  .tab-nav {
+    display: flex;
+    gap: var(--space-7);
+    border-bottom: 1px solid var(--border-1);
+    margin-bottom: var(--space-7);
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  .tab-nav::-webkit-scrollbar { display: none; }
+  .tab-btn {
+    flex: 0 0 auto;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: var(--space-4) 0;
+    font-family: var(--font-sans);
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--fg-2);
+    position: relative;
+    transition: color var(--dur-base) var(--ease-standard);
+    white-space: nowrap;
+  }
+  .tab-btn:hover { color: var(--fg-1); }
+  .tab-btn.active { color: var(--fg-1); font-weight: 600; }
+  .tab-btn.active::after {
+    content: '';
+    position: absolute;
+    left: 0; right: 0; bottom: -1px;
+    height: 2px;
+    background: var(--brand-blue);
+  }
+  .tab-num {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--fg-3);
+    margin-right: var(--space-2);
+    letter-spacing: 0.08em;
+  }
+  .tab-btn.active .tab-num { color: var(--brand-blue); }
+
+  /* ── Panels ── */
+  .panel { display: none; animation: fadeUp var(--dur-slow) var(--ease-emphasis); }
+  .panel.active { display: block; }
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ── Section header pattern ── */
+  .section-head { margin-bottom: var(--space-6); }
+  .section-head h2 {
+    font-size: 28px;
+    font-weight: 700;
+    letter-spacing: -0.015em;
+    line-height: 1.25;
+    color: var(--fg-1);
+    margin-bottom: var(--space-3);
+  }
+  .section-head .lede {
+    font-size: 16px;
+    color: var(--fg-2);
+    max-width: 720px;
+    line-height: 1.6;
+  }
+
+  /* ── Card ── */
+  .card {
+    background: var(--paper);
+    border: 1px solid var(--border-1);
+    border-radius: var(--radius-lg);
+    padding: var(--space-6);
+    box-shadow: var(--shadow-sm);
+    margin-bottom: var(--space-5);
+  }
+  .card-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: var(--space-4);
+    margin-bottom: var(--space-5);
+    flex-wrap: wrap;
+  }
+  .card-title {
+    font-size: 18px;
+    font-weight: 600;
+    letter-spacing: -0.005em;
+    color: var(--fg-1);
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+  }
+  .card-title .diamond {
+    color: var(--brand-blue);
+    font-size: 18px;
+    line-height: 1;
+  }
+  .card-sub {
+    font-size: 13px;
+    color: var(--fg-3);
+  }
+  .card p.note {
+    font-size: 13px;
+    color: var(--fg-3);
+    line-height: 1.55;
+    margin-top: var(--space-4);
+    padding-top: var(--space-4);
+    border-top: 1px solid var(--border-1);
+  }
+
+  /* ── Slider rows ── */
+  .slider-row {
+    display: grid;
+    grid-template-columns: 1fr 1.2fr auto;
+    align-items: center;
+    gap: var(--space-5);
+    padding: var(--space-3) 0;
+  }
+  .slider-row + .slider-row { border-top: 1px solid var(--border-1); }
+  .slider-label {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--fg-2);
+  }
+  .slider-value {
+    font-family: var(--font-mono);
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--fg-1);
+    text-align: right;
+    min-width: 110px;
+    background: var(--bg-2);
+    padding: 6px 12px;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border-1);
+  }
+
+  /* Custom slider */
+  input[type="range"] {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 100%;
+    height: 4px;
+    background: var(--ink-200);
+    border-radius: 999px;
+    outline: none;
+    cursor: pointer;
+  }
+  input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 18px;
+    height: 18px;
+    background: var(--brand-blue);
+    border-radius: 50%;
+    cursor: pointer;
+    border: 3px solid #fff;
+    box-shadow: 0 0 0 1px var(--ink-300), 0 2px 4px rgba(40,171,231,0.3);
+    transition: transform var(--dur-fast) var(--ease-standard);
+  }
+  input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.15); }
+  input[type="range"]::-moz-range-thumb {
+    width: 18px;
+    height: 18px;
+    background: var(--brand-blue);
+    border-radius: 50%;
+    cursor: pointer;
+    border: 3px solid #fff;
+    box-shadow: 0 0 0 1px var(--ink-300), 0 2px 4px rgba(40,171,231,0.3);
+  }
+
+  /* Number input style */
+  input.num-input {
+    font-family: var(--font-mono);
+    font-size: 14px;
+    font-weight: 500;
+    padding: 8px 14px;
+    border: 1px solid var(--border-2);
+    border-radius: var(--radius-sm);
+    background: #fff;
+    width: 110px;
+    text-align: right;
+    color: var(--fg-1);
+    transition: border-color var(--dur-base) var(--ease-standard), box-shadow var(--dur-base) var(--ease-standard);
+  }
+  input.num-input:focus {
+    outline: none;
+    border-color: var(--brand-blue);
+    box-shadow: 0 0 0 3px rgba(40,171,231,0.18);
+  }
+  /* Hide default spinner buttons */
+  input.num-input::-webkit-outer-spin-button,
+  input.num-input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+  input.num-input[type=number] { -moz-appearance: textfield; }
+
+  /* ── Stat grid ── */
+  .stat-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: var(--space-4);
+    margin-bottom: var(--space-5);
+  }
+  .stat-card {
+    background: var(--paper);
+    border: 1px solid var(--border-1);
+    border-radius: var(--radius-lg);
+    padding: var(--space-5);
+    box-shadow: var(--shadow-xs);
+  }
+  .stat-card .l {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--fg-3);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: var(--space-3);
+  }
+  .stat-card .n {
+    font-size: 32px;
+    font-weight: 800;
+    letter-spacing: -0.025em;
+    line-height: 1;
+    color: var(--fg-1);
+    font-feature-settings: 'tnum';
+  }
+  .stat-card .n.blue { color: var(--brand-blue); }
+  .stat-card .n.danger { color: var(--danger); }
+  .stat-card .n.success { color: var(--success); }
+  .stat-card .s {
+    font-size: 12px;
+    color: var(--fg-3);
+    margin-top: var(--space-2);
+  }
+
+  /* ── Inline output card (compact stat) ── */
+  .inline-output {
+    background: var(--bg-2);
+    border-radius: var(--radius-md);
+    padding: var(--space-4) var(--space-5);
+    margin-top: var(--space-4);
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: var(--space-4);
+    flex-wrap: wrap;
+  }
+  .inline-output .l {
+    font-size: 13px;
+    color: var(--fg-3);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    font-weight: 500;
+  }
+  .inline-output .n {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--fg-1);
+    font-family: var(--font-mono);
+    letter-spacing: -0.01em;
+  }
+  .inline-output .n.danger { color: var(--danger); }
+  .inline-output .extra {
+    flex-basis: 100%;
+    font-size: 12px;
+    color: var(--fg-3);
+    border-top: 1px dashed var(--border-1);
+    padding-top: var(--space-3);
+    margin-top: var(--space-2);
+  }
+
+  /* ── Total kerugian highlight ── */
+  .total-loss-box {
+    background: var(--blue-900);
+    color: #fff;
+    border-radius: var(--radius-xl);
+    padding: var(--space-7);
+    margin-bottom: var(--space-5);
+    position: relative;
+    overflow: hidden;
+  }
+  .total-loss-box .eyebrow { color: var(--brand-blue); margin-bottom: var(--space-3); }
+  .total-loss-box .grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-7);
+  }
+  .total-loss-box .label-l {
+    font-size: 14px;
+    color: rgba(255,255,255,0.6);
+    margin-bottom: var(--space-2);
+  }
+  .total-loss-box .big {
+    font-size: clamp(40px, 5vw, 56px);
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    line-height: 1;
+    color: var(--brand-blue);
+    font-feature-settings: 'tnum';
+  }
+  .total-loss-box .sub {
+    font-size: 14px;
+    color: rgba(255,255,255,0.5);
+    margin-top: var(--space-2);
+  }
+  .total-loss-box .note {
+    margin-top: var(--space-6);
+    padding-top: var(--space-5);
+    border-top: 1px solid rgba(255,255,255,0.1);
+    font-size: 14px;
+    color: rgba(255,255,255,0.65);
+    line-height: 1.6;
+  }
+
+  /* ── Bar chart ── */
+  .bar-list { display: flex; flex-direction: column; gap: var(--space-4); }
+  .bar-item .bar-head {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: var(--space-2);
+    font-size: 14px;
+  }
+  .bar-item .bar-label { color: var(--fg-2); font-weight: 500; }
+  .bar-item .bar-val { font-family: var(--font-mono); color: var(--fg-1); font-weight: 600; }
+  .bar-track {
+    background: var(--bg-3);
+    height: 10px;
+    border-radius: 999px;
+    overflow: hidden;
+  }
+  .bar-fill {
+    height: 100%;
+    border-radius: 999px;
+    transition: width var(--dur-slow) var(--ease-emphasis);
+  }
+
+  /* ── Toggle ── */
+  .toggle-card {
+    background: var(--blue-50);
+    border: 1px solid var(--blue-200);
+    border-radius: var(--radius-lg);
+    padding: var(--space-5);
+    margin-bottom: var(--space-5);
+    display: flex;
+    align-items: center;
+    gap: var(--space-5);
+    cursor: pointer;
+    transition: background var(--dur-base) var(--ease-standard);
+  }
+  .toggle-card:hover { background: #DCEFFB; }
+  .toggle-checkbox {
+    appearance: none;
+    -webkit-appearance: none;
+    width: 22px;
+    height: 22px;
+    border: 2px solid var(--blue-400);
+    border-radius: var(--radius-xs);
+    flex-shrink: 0;
+    cursor: pointer;
+    background: #fff;
+    position: relative;
+    transition: all var(--dur-base) var(--ease-standard);
+  }
+  .toggle-checkbox:checked {
+    background: var(--brand-blue);
+    border-color: var(--brand-blue);
+  }
+  .toggle-checkbox:checked::after {
+    content: '';
+    position: absolute;
+    top: 2px; left: 6px;
+    width: 5px;
+    height: 11px;
+    border: solid white;
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+  }
+  .toggle-text { flex: 1; }
+  .toggle-text .t1 { font-weight: 600; color: var(--fg-1); font-size: 15px; margin-bottom: 2px; }
+  .toggle-text .t2 { font-size: 13px; color: var(--fg-2); }
+
+  /* Saving prominent display when annual checked */
+  .saving-display {
+    background: var(--blue-900);
+    color: #fff;
+    border-radius: var(--radius-xl);
+    padding: var(--space-7);
+    margin-bottom: var(--space-5);
+    text-align: center;
+    display: none;
+  }
+  .saving-display.show { display: block; }
+  .saving-display .label-up {
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--brand-blue);
+    margin-bottom: var(--space-3);
+  }
+  .saving-display .save-num {
+    font-size: clamp(48px, 7vw, 88px);
+    font-weight: 800;
+    letter-spacing: -0.035em;
+    line-height: 1;
+    color: var(--brand-blue);
+    margin-bottom: var(--space-3);
+    font-feature-settings: 'tnum';
+  }
+  .saving-display .save-desc {
+    font-size: 15px;
+    color: rgba(255,255,255,0.65);
+    max-width: 480px;
+    margin: 0 auto;
+    line-height: 1.6;
+  }
+
+  /* ── Pricing comparison table ── */
+  .price-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: var(--space-4);
+  }
+  .price-table th, .price-table td {
+    padding: var(--space-4) var(--space-3);
+    text-align: left;
+    font-size: 14px;
+    border-bottom: 1px solid var(--border-1);
+  }
+  .price-table th {
+    font-weight: 600;
+    color: var(--fg-3);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    font-size: 12px;
+  }
+  .price-table td.num {
+    font-family: var(--font-mono);
+    text-align: right;
+    color: var(--fg-1);
+    font-weight: 500;
+  }
+  .price-table tr.total td {
+    font-weight: 700;
+    font-size: 16px;
+    color: var(--fg-1);
+    border-bottom: none;
+    border-top: 2px solid var(--brand-charcoal);
+    padding-top: var(--space-4);
+  }
+  .price-table tr.total td.num { color: var(--brand-blue); }
+
+  /* ── Verdict badge ── */
+  .verdict {
+    padding: var(--space-3) var(--space-5);
+    border-radius: var(--radius-pill);
+    font-size: 13px;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    letter-spacing: 0.02em;
+  }
+  .verdict.green { background: var(--success-bg); color: var(--success); border: 1px solid #BBE5C7; }
+  .verdict.amber { background: var(--warning-bg); color: var(--warning); border: 1px solid #F8DA9F; }
+  .verdict.red { background: var(--danger-bg); color: var(--danger); border: 1px solid #F4B5B5; }
+  .verdict::before {
+    content: '◆';
+    font-size: 10px;
+  }
+
+  /* ── Benefit list ── */
+  .benefit-list {
+    list-style: none;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: var(--space-4);
+    padding: 0;
+  }
+  .benefit-list li {
+    background: var(--bg-2);
+    border-radius: var(--radius-md);
+    padding: var(--space-4) var(--space-5);
+    font-size: 14px;
+    color: var(--fg-2);
+    line-height: 1.55;
+    position: relative;
+    padding-left: 36px;
+  }
+  .benefit-list li::before {
+    content: '◆';
+    position: absolute;
+    left: 14px;
+    top: 16px;
+    color: var(--brand-blue);
+    font-size: 14px;
+  }
+
+  /* ── Conclusion / narrative box ── */
+  .conclusion {
+    background: var(--blue-50);
+    border-radius: var(--radius-lg);
+    padding: var(--space-6);
+    margin-top: var(--space-5);
+  }
+  .conclusion .eyebrow { color: var(--brand-blue); margin-bottom: var(--space-3); }
+  .conclusion p {
+    font-size: 16px;
+    color: var(--fg-1);
+    line-height: 1.7;
+    max-width: 800px;
+  }
+  .conclusion p + p { margin-top: var(--space-3); }
+
+  /* ── Footer ── */
+  .footer {
+    text-align: center;
+    padding: var(--space-7) var(--space-6);
+    color: var(--fg-3);
+    font-size: 13px;
+    line-height: 1.6;
+    border-top: 1px solid var(--border-1);
+    background: var(--bg-2);
+  }
+  .footer a { color: var(--brand-blue); text-decoration: none; font-weight: 500; }
+  .footer a:hover { text-decoration: underline; }
+
+  /* ── Section divider ── */
+  .divider {
+    height: 1px;
+    background: var(--border-1);
+    margin: var(--space-7) 0 var(--space-6);
+  }
+
+  /* ── Formula reveal (collapsible math) ── */
+  .formula-toggle {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--brand-blue);
+    font-family: var(--font-sans);
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    padding: var(--space-3) 0 0;
+    margin-top: var(--space-3);
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    transition: color var(--dur-base) var(--ease-standard);
+  }
+  .formula-toggle:hover { color: var(--blue-600); }
+  .formula-toggle::before {
+    content: '◆';
+    font-size: 10px;
+  }
+  .formula-toggle .arrow {
+    display: inline-block;
+    transition: transform var(--dur-base) var(--ease-standard);
+    font-size: 10px;
+  }
+  .formula-toggle.open .arrow { transform: rotate(180deg); }
+  .formula-body {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height var(--dur-slow) var(--ease-emphasis);
+  }
+  .formula-body.open { max-height: 2000px; }
+  .formula-inner {
+    margin-top: var(--space-4);
+    background: var(--bg-2);
+    border-left: 3px solid var(--brand-blue);
+    border-radius: var(--radius-md);
+    padding: var(--space-5) var(--space-5) var(--space-5) var(--space-6);
+  }
+  .formula-legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-4);
+    padding-bottom: var(--space-4);
+    margin-bottom: var(--space-5);
+    border-bottom: 1px dashed var(--border-2);
+    font-size: 12px;
+    color: var(--fg-3);
+  }
+  .formula-legend span {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+  }
+  .formula-legend span::before {
+    content: '◆';
+    font-size: 10px;
+  }
+  .formula-legend .l-input::before { color: var(--brand-blue); }
+  .formula-legend .l-assumption::before { color: var(--warning); }
+  .formula-legend .l-result::before { color: var(--ink-700); }
+
+  .formula-step { margin-bottom: var(--space-5); }
+  .formula-step:last-child { margin-bottom: 0; }
+  .formula-step .step-label {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--fg-3);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: var(--space-2);
+  }
+  .formula-step .step-desc {
+    font-size: 13px;
+    color: var(--fg-2);
+    margin-bottom: var(--space-3);
+    line-height: 1.55;
+  }
+  .formula-line {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    line-height: 1.7;
+    color: var(--fg-1);
+    padding: var(--space-2) 0;
+  }
+  .formula-line.result {
+    margin-top: var(--space-3);
+    padding-top: var(--space-3);
+    border-top: 1px solid var(--border-2);
+    font-weight: 600;
+  }
+  .v-input { color: var(--brand-blue); font-weight: 600; }
+  .v-assumption { color: var(--warning); font-weight: 600; }
+  .v-result { color: var(--ink-900); font-weight: 700; }
+
+  /* Slider preamble (for narrative under afkir) */
+  .slider-preamble {
+    background: var(--blue-50);
+    border-left: 3px solid var(--brand-blue);
+    border-radius: var(--radius-md);
+    padding: var(--space-4) var(--space-5);
+    margin-bottom: var(--space-5);
+    font-size: 14px;
+    color: var(--fg-2);
+    line-height: 1.65;
+    font-style: italic;
+  }
+  .slider-preamble strong { color: var(--fg-1); font-weight: 600; font-style: normal; }
+
+  /* ── Responsive ── */
+  @media (max-width: 720px) {
+    .header { padding: var(--space-7) var(--space-5); }
+    .container { padding: var(--space-6) var(--space-5) var(--space-8); }
+    .slider-row {
+      grid-template-columns: 1fr;
+      gap: var(--space-2);
+    }
+    .slider-row .slider-value { text-align: left; align-self: start; }
+    .total-loss-box .grid { grid-template-columns: 1fr; gap: var(--space-5); }
+    .stat-card .n { font-size: 28px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ══ HEADER ══ -->
+<header class="header">
+  <div class="header-inner">
+    <div class="wordmark">
+      <svg class="wordmark-logo" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 139 375 97" preserveAspectRatio="xMidYMid meet" version="1.0"><defs><g/><clipPath id="aa238ce2e7"><path d="M 0 0.894531 L 95.214844 0.894531 L 95.214844 96.105469 L 0 96.105469 Z M 0 0.894531 " clip-rule="nonzero"/></clipPath><clipPath id="f8e4826a2c"><path d="M 17.25 0.894531 L 77.964844 0.894531 C 87.492188 0.894531 95.214844 8.617188 95.214844 18.144531 L 95.214844 78.855469 C 95.214844 88.382812 87.492188 96.105469 77.964844 96.105469 L 17.25 96.105469 C 7.722656 96.105469 0 88.382812 0 78.855469 L 0 18.144531 C 0 8.617188 7.722656 0.894531 17.25 0.894531 Z M 17.25 0.894531 " clip-rule="nonzero"/></clipPath><clipPath id="7ec59f70fd"><path d="M 0 0.894531 L 95.214844 0.894531 L 95.214844 96.105469 L 0 96.105469 Z M 0 0.894531 " clip-rule="nonzero"/></clipPath><clipPath id="8b26d4ef24"><path d="M 17.25 0.894531 L 77.964844 0.894531 C 87.492188 0.894531 95.214844 8.617188 95.214844 18.144531 L 95.214844 78.855469 C 95.214844 88.382812 87.492188 96.105469 77.964844 96.105469 L 17.25 96.105469 C 7.722656 96.105469 0 88.382812 0 78.855469 L 0 18.144531 C 0 8.617188 7.722656 0.894531 17.25 0.894531 Z M 17.25 0.894531 " clip-rule="nonzero"/></clipPath><clipPath id="2f03420f8f"><rect x="0" width="96" y="0" height="97"/></clipPath><clipPath id="4c44b8f854"><path d="M 12.640625 14.609375 L 39.398438 14.609375 L 39.398438 59.867188 L 12.640625 59.867188 Z M 12.640625 14.609375 " clip-rule="nonzero"/></clipPath><clipPath id="9b153f40ab"><path d="M 19.328125 14.609375 L 39.398438 14.609375 L 32.707031 59.796875 L 12.640625 59.796875 Z M 19.328125 14.609375 " clip-rule="nonzero"/></clipPath><clipPath id="df760ec4d3"><path d="M 0.640625 0.609375 L 27.398438 0.609375 L 27.398438 45.867188 L 0.640625 45.867188 Z M 0.640625 0.609375 " clip-rule="nonzero"/></clipPath><clipPath id="e4cd6c72d3"><path d="M 7.328125 0.609375 L 27.398438 0.609375 L 20.707031 45.796875 L 0.640625 45.796875 Z M 7.328125 0.609375 " clip-rule="nonzero"/></clipPath><clipPath id="2be0aefdc5"><rect x="0" width="28" y="0" height="46"/></clipPath><clipPath id="1019a9daf0"><path d="M 35.792969 14.609375 L 54.09375 14.609375 L 54.09375 59.855469 L 35.792969 59.855469 Z M 35.792969 14.609375 " clip-rule="nonzero"/></clipPath><clipPath id="54426e43be"><path d="M 42.484375 14.609375 L 54.09375 14.609375 L 47.402344 59.796875 L 35.792969 59.796875 Z M 42.484375 14.609375 " clip-rule="nonzero"/></clipPath><clipPath id="0a83026e77"><path d="M 0.792969 0.609375 L 19.09375 0.609375 L 19.09375 45.855469 L 0.792969 45.855469 Z M 0.792969 0.609375 " clip-rule="nonzero"/></clipPath><clipPath id="3b597e8490"><path d="M 7.484375 0.609375 L 19.09375 0.609375 L 12.402344 45.796875 L 0.792969 45.796875 Z M 7.484375 0.609375 " clip-rule="nonzero"/></clipPath><clipPath id="9431234fda"><rect x="0" width="20" y="0" height="46"/></clipPath><clipPath id="b33db08909"><path d="M 64.234375 37.203125 L 82.574219 37.203125 L 82.574219 82.40625 L 64.234375 82.40625 Z M 64.234375 37.203125 " clip-rule="nonzero"/></clipPath><clipPath id="bdfdde8055"><path d="M 70.925781 37.203125 L 82.574219 37.203125 L 75.882812 82.390625 L 64.234375 82.390625 Z M 70.925781 37.203125 " clip-rule="nonzero"/></clipPath><clipPath id="78c941d1bc"><path d="M 0.234375 0.203125 L 18.574219 0.203125 L 18.574219 45.40625 L 0.234375 45.40625 Z M 0.234375 0.203125 " clip-rule="nonzero"/></clipPath><clipPath id="1119104ebe"><path d="M 6.925781 0.203125 L 18.574219 0.203125 L 11.882812 45.390625 L 0.234375 45.390625 Z M 6.925781 0.203125 " clip-rule="nonzero"/></clipPath><clipPath id="1901b51e71"><rect x="0" width="19" y="0" height="46"/></clipPath><clipPath id="1eb817ccfe"><path d="M 49.171875 14.609375 L 62.550781 14.609375 L 62.550781 59.816406 L 49.171875 59.816406 Z M 49.171875 14.609375 " clip-rule="nonzero"/></clipPath><clipPath id="67187c9e44"><path d="M 55.863281 14.609375 L 62.550781 14.609375 L 55.863281 59.796875 L 49.171875 59.796875 Z M 55.863281 14.609375 " clip-rule="nonzero"/></clipPath><clipPath id="7fcb136d5b"><path d="M 0.171875 0.609375 L 13.550781 0.609375 L 13.550781 45.816406 L 0.171875 45.816406 Z M 0.171875 0.609375 " clip-rule="nonzero"/></clipPath><clipPath id="668f322143"><path d="M 6.863281 0.609375 L 13.550781 0.609375 L 6.863281 45.796875 L 0.171875 45.796875 Z M 6.863281 0.609375 " clip-rule="nonzero"/></clipPath><clipPath id="9215d7c472"><rect x="0" width="14" y="0" height="46"/></clipPath><clipPath id="9e156bd900"><path d="M 55.863281 37.203125 L 69.242188 37.203125 L 69.242188 82.410156 L 55.863281 82.410156 Z M 55.863281 37.203125 " clip-rule="nonzero"/></clipPath><clipPath id="a92b9d2389"><path d="M 62.550781 37.203125 L 69.242188 37.203125 L 62.550781 82.390625 L 55.863281 82.390625 Z M 62.550781 37.203125 " clip-rule="nonzero"/></clipPath><clipPath id="6774ba9902"><path d="M 0.863281 0.203125 L 14.242188 0.203125 L 14.242188 45.410156 L 0.863281 45.410156 Z M 0.863281 0.203125 " clip-rule="nonzero"/></clipPath><clipPath id="4a33020687"><path d="M 7.550781 0.203125 L 14.242188 0.203125 L 7.550781 45.390625 L 0.863281 45.390625 Z M 7.550781 0.203125 " clip-rule="nonzero"/></clipPath><clipPath id="374e3828d2"><rect x="0" width="15" y="0" height="46"/></clipPath><clipPath id="bd5dd082f7"><rect x="0" width="375" y="0" height="97"/></clipPath></defs><g transform="matrix(1, 0, 0, 1, 0, 139)"><g clip-path="url(#bd5dd082f7)"><g fill="#353334" fill-opacity="1"><g transform="translate(109.365883, 63.986511)"><g><path d="M 22.65625 -0.78125 C 21.550781 -0.46875 20.125 -0.171875 18.375 0.109375 C 16.632812 0.390625 14.800781 0.53125 12.875 0.53125 C 10.925781 0.53125 9.300781 0.269531 8 -0.25 C 6.707031 -0.78125 5.679688 -1.519531 4.921875 -2.46875 C 4.171875 -3.414062 3.632812 -4.539062 3.3125 -5.84375 C 3 -7.15625 2.84375 -8.597656 2.84375 -10.171875 L 2.84375 -22.96875 L 9.34375 -22.96875 L 9.34375 -10.953125 C 9.34375 -8.859375 9.617188 -7.34375 10.171875 -6.40625 C 10.722656 -5.476562 11.753906 -5.015625 13.265625 -5.015625 C 13.734375 -5.015625 14.226562 -5.035156 14.75 -5.078125 C 15.28125 -5.128906 15.75 -5.179688 16.15625 -5.234375 L 16.15625 -22.96875 L 22.65625 -22.96875 Z M 22.65625 -0.78125 "/></g></g></g><g fill="#353334" fill-opacity="1"><g transform="translate(135.074848, 63.986511)"><g><path d="M 3.0625 -22.171875 C 4.164062 -22.492188 5.585938 -22.789062 7.328125 -23.0625 C 9.078125 -23.34375 10.910156 -23.484375 12.828125 -23.484375 C 14.785156 -23.484375 16.410156 -23.226562 17.703125 -22.71875 C 18.992188 -22.207031 20.019531 -21.488281 20.78125 -20.5625 C 21.539062 -19.632812 22.078125 -18.53125 22.390625 -17.25 C 22.710938 -15.96875 22.875 -14.539062 22.875 -12.96875 L 22.875 0 L 16.375 0 L 16.375 -12.1875 C 16.375 -14.28125 16.097656 -15.757812 15.546875 -16.625 C 14.992188 -17.5 13.957031 -17.9375 12.4375 -17.9375 C 11.976562 -17.9375 11.484375 -17.914062 10.953125 -17.875 C 10.429688 -17.832031 9.96875 -17.78125 9.5625 -17.71875 L 9.5625 0 L 3.0625 0 Z M 3.0625 -22.171875 "/></g></g></g><g fill="#353334" fill-opacity="1"><g transform="translate(160.783813, 63.986511)"><g><path d="M 9.5625 0 L 3.0625 0 L 3.0625 -22.96875 L 9.5625 -22.96875 Z M 10.171875 -29.59375 C 10.171875 -28.40625 9.785156 -27.46875 9.015625 -26.78125 C 8.242188 -26.09375 7.332031 -25.75 6.28125 -25.75 C 5.238281 -25.75 4.332031 -26.09375 3.5625 -26.78125 C 2.789062 -27.46875 2.40625 -28.40625 2.40625 -29.59375 C 2.40625 -30.789062 2.789062 -31.726562 3.5625 -32.40625 C 4.332031 -33.09375 5.238281 -33.4375 6.28125 -33.4375 C 7.332031 -33.4375 8.242188 -33.09375 9.015625 -32.40625 C 9.785156 -31.726562 10.171875 -30.789062 10.171875 -29.59375 Z M 10.171875 -29.59375 "/></g></g></g><g fill="#353334" fill-opacity="1"><g transform="translate(173.398225, 63.986511)"><g><path d="M 2.84375 -28.6875 L 9.34375 -29.734375 L 9.34375 -22.96875 L 17.15625 -22.96875 L 17.15625 -17.546875 L 9.34375 -17.546875 L 9.34375 -9.46875 C 9.34375 -8.101562 9.582031 -7.015625 10.0625 -6.203125 C 10.539062 -5.390625 11.507812 -4.984375 12.96875 -4.984375 C 13.664062 -4.984375 14.382812 -5.046875 15.125 -5.171875 C 15.863281 -5.304688 16.539062 -5.488281 17.15625 -5.71875 L 18.078125 -0.65625 C 17.285156 -0.332031 16.410156 -0.0546875 15.453125 0.171875 C 14.492188 0.410156 13.316406 0.53125 11.921875 0.53125 C 10.140625 0.53125 8.664062 0.289062 7.5 -0.1875 C 6.34375 -0.675781 5.414062 -1.347656 4.71875 -2.203125 C 4.019531 -3.066406 3.53125 -4.109375 3.25 -5.328125 C 2.976562 -6.546875 2.84375 -7.898438 2.84375 -9.390625 Z M 2.84375 -28.6875 "/></g></g></g><g fill="#353334" fill-opacity="1"><g transform="translate(192.778158, 63.986511)"><g><path d="M 1.96875 -11.3125 C 1.96875 -13.34375 2.28125 -15.125 2.90625 -16.65625 C 3.53125 -18.1875 4.347656 -19.457031 5.359375 -20.46875 C 6.378906 -21.488281 7.550781 -22.257812 8.875 -22.78125 C 10.207031 -23.3125 11.570312 -23.578125 12.96875 -23.578125 C 16.226562 -23.578125 18.800781 -22.578125 20.6875 -20.578125 C 22.582031 -18.585938 23.53125 -15.65625 23.53125 -11.78125 C 23.53125 -11.40625 23.515625 -10.988281 23.484375 -10.53125 C 23.453125 -10.082031 23.425781 -9.6875 23.40625 -9.34375 L 8.640625 -9.34375 C 8.785156 -8 9.410156 -6.9375 10.515625 -6.15625 C 11.628906 -5.375 13.113281 -4.984375 14.96875 -4.984375 C 16.164062 -4.984375 17.335938 -5.085938 18.484375 -5.296875 C 19.640625 -5.515625 20.578125 -5.785156 21.296875 -6.109375 L 22.171875 -0.828125 C 21.828125 -0.648438 21.363281 -0.472656 20.78125 -0.296875 C 20.195312 -0.128906 19.546875 0.015625 18.828125 0.140625 C 18.117188 0.273438 17.359375 0.382812 16.546875 0.46875 C 15.734375 0.5625 14.914062 0.609375 14.09375 0.609375 C 12.03125 0.609375 10.234375 0.304688 8.703125 -0.296875 C 7.179688 -0.910156 5.914062 -1.75 4.90625 -2.8125 C 3.90625 -3.875 3.164062 -5.132812 2.6875 -6.59375 C 2.207031 -8.050781 1.96875 -9.625 1.96875 -11.3125 Z M 17.25 -13.796875 C 17.21875 -14.347656 17.117188 -14.882812 16.953125 -15.40625 C 16.796875 -15.9375 16.550781 -16.40625 16.21875 -16.8125 C 15.882812 -17.21875 15.460938 -17.550781 14.953125 -17.8125 C 14.441406 -18.070312 13.804688 -18.203125 13.046875 -18.203125 C 12.328125 -18.203125 11.703125 -18.078125 11.171875 -17.828125 C 10.648438 -17.585938 10.210938 -17.257812 9.859375 -16.84375 C 9.515625 -16.4375 9.25 -15.960938 9.0625 -15.421875 C 8.875 -14.890625 8.734375 -14.347656 8.640625 -13.796875 Z M 17.25 -13.796875 "/></g></g></g><g fill="#353334" fill-opacity="1"><g transform="translate(218.268878, 63.986511)"><g><path d="M 9.5625 -14.671875 C 10.195312 -15.367188 10.859375 -16.09375 11.546875 -16.84375 C 12.234375 -17.601562 12.894531 -18.351562 13.53125 -19.09375 C 14.175781 -19.84375 14.78125 -20.550781 15.34375 -21.21875 C 15.914062 -21.882812 16.40625 -22.46875 16.8125 -22.96875 L 24.53125 -22.96875 C 22.988281 -21.1875 21.484375 -19.488281 20.015625 -17.875 C 18.546875 -16.257812 16.9375 -14.59375 15.1875 -12.875 C 16.0625 -12.09375 16.960938 -11.15625 17.890625 -10.0625 C 18.828125 -8.96875 19.734375 -7.835938 20.609375 -6.671875 C 21.484375 -5.515625 22.28125 -4.351562 23 -3.1875 C 23.726562 -2.019531 24.34375 -0.957031 24.84375 0 L 17.375 0 C 16.90625 -0.757812 16.375 -1.597656 15.78125 -2.515625 C 15.1875 -3.429688 14.550781 -4.347656 13.875 -5.265625 C 13.207031 -6.179688 12.503906 -7.0625 11.765625 -7.90625 C 11.023438 -8.75 10.289062 -9.460938 9.5625 -10.046875 L 9.5625 0 L 3.0625 0 L 3.0625 -32.828125 L 9.5625 -33.875 Z M 9.5625 -14.671875 "/></g></g></g><g fill="#353334" fill-opacity="1"><g transform="translate(243.541353, 63.986511)"><g/></g></g><g fill="#353334" fill-opacity="1"><g transform="translate(254.016996, 63.986511)"><g><path d="M 9.640625 -4.671875 C 10.835938 -4.671875 11.679688 -4.785156 12.171875 -5.015625 C 12.671875 -5.253906 12.921875 -5.707031 12.921875 -6.375 C 12.921875 -6.894531 12.597656 -7.351562 11.953125 -7.75 C 11.316406 -8.144531 10.34375 -8.585938 9.03125 -9.078125 C 8.019531 -9.453125 7.097656 -9.84375 6.265625 -10.25 C 5.429688 -10.664062 4.722656 -11.15625 4.140625 -11.71875 C 3.566406 -12.289062 3.117188 -12.96875 2.796875 -13.75 C 2.472656 -14.539062 2.3125 -15.488281 2.3125 -16.59375 C 2.3125 -18.738281 3.109375 -20.4375 4.703125 -21.6875 C 6.304688 -22.945312 8.507812 -23.578125 11.3125 -23.578125 C 12.707031 -23.578125 14.046875 -23.453125 15.328125 -23.203125 C 16.609375 -22.953125 17.625 -22.679688 18.375 -22.390625 L 17.25 -17.328125 C 16.488281 -17.585938 15.664062 -17.816406 14.78125 -18.015625 C 13.894531 -18.222656 12.894531 -18.328125 11.78125 -18.328125 C 9.75 -18.328125 8.734375 -17.765625 8.734375 -16.640625 C 8.734375 -16.367188 8.773438 -16.128906 8.859375 -15.921875 C 8.953125 -15.722656 9.128906 -15.53125 9.390625 -15.34375 C 9.648438 -15.15625 10.003906 -14.953125 10.453125 -14.734375 C 10.898438 -14.515625 11.476562 -14.273438 12.1875 -14.015625 C 13.601562 -13.492188 14.773438 -12.976562 15.703125 -12.46875 C 16.640625 -11.957031 17.378906 -11.398438 17.921875 -10.796875 C 18.460938 -10.203125 18.84375 -9.539062 19.0625 -8.8125 C 19.28125 -8.09375 19.390625 -7.25 19.390625 -6.28125 C 19.390625 -4.007812 18.535156 -2.289062 16.828125 -1.125 C 15.128906 0.03125 12.722656 0.609375 9.609375 0.609375 C 7.566406 0.609375 5.867188 0.429688 4.515625 0.078125 C 3.160156 -0.265625 2.222656 -0.550781 1.703125 -0.78125 L 2.796875 -6.0625 C 3.898438 -5.625 5.035156 -5.28125 6.203125 -5.03125 C 7.367188 -4.789062 8.515625 -4.671875 9.640625 -4.671875 Z M 9.640625 -4.671875 "/></g></g></g><g fill="#353334" fill-opacity="1"><g transform="translate(275.186512, 63.986511)"><g><path d="M 24.53125 -11.53125 C 24.53125 -9.71875 24.269531 -8.0625 23.75 -6.5625 C 23.226562 -5.070312 22.472656 -3.796875 21.484375 -2.734375 C 20.492188 -1.671875 19.304688 -0.847656 17.921875 -0.265625 C 16.535156 0.316406 14.984375 0.609375 13.265625 0.609375 C 11.578125 0.609375 10.039062 0.316406 8.65625 -0.265625 C 7.28125 -0.847656 6.097656 -1.671875 5.109375 -2.734375 C 4.117188 -3.796875 3.347656 -5.070312 2.796875 -6.5625 C 2.242188 -8.0625 1.96875 -9.71875 1.96875 -11.53125 C 1.96875 -13.332031 2.25 -14.972656 2.8125 -16.453125 C 3.382812 -17.941406 4.171875 -19.207031 5.171875 -20.25 C 6.171875 -21.300781 7.363281 -22.117188 8.75 -22.703125 C 10.132812 -23.285156 11.640625 -23.578125 13.265625 -23.578125 C 14.929688 -23.578125 16.453125 -23.285156 17.828125 -22.703125 C 19.210938 -22.117188 20.398438 -21.300781 21.390625 -20.25 C 22.378906 -19.207031 23.148438 -17.941406 23.703125 -16.453125 C 24.253906 -14.972656 24.53125 -13.332031 24.53125 -11.53125 Z M 17.90625 -11.53125 C 17.90625 -13.53125 17.503906 -15.101562 16.703125 -16.25 C 15.898438 -17.40625 14.753906 -17.984375 13.265625 -17.984375 C 11.785156 -17.984375 10.632812 -17.40625 9.8125 -16.25 C 9 -15.101562 8.59375 -13.53125 8.59375 -11.53125 C 8.59375 -9.519531 9 -7.925781 9.8125 -6.75 C 10.632812 -5.570312 11.785156 -4.984375 13.265625 -4.984375 C 14.753906 -4.984375 15.898438 -5.570312 16.703125 -6.75 C 17.503906 -7.925781 17.90625 -9.519531 17.90625 -11.53125 Z M 17.90625 -11.53125 "/></g></g></g><g fill="#353334" fill-opacity="1"><g transform="translate(301.681153, 63.986511)"><g><path d="M 12.21875 0.4375 C 10.332031 0.40625 8.796875 0.203125 7.609375 -0.171875 C 6.429688 -0.546875 5.5 -1.078125 4.8125 -1.765625 C 4.132812 -2.453125 3.671875 -3.28125 3.421875 -4.25 C 3.179688 -5.226562 3.0625 -6.328125 3.0625 -7.546875 L 3.0625 -32.828125 L 9.5625 -33.875 L 9.5625 -8.859375 C 9.5625 -8.273438 9.601562 -7.75 9.6875 -7.28125 C 9.78125 -6.820312 9.945312 -6.429688 10.1875 -6.109375 C 10.4375 -5.785156 10.796875 -5.519531 11.265625 -5.3125 C 11.734375 -5.113281 12.359375 -4.988281 13.140625 -4.9375 Z M 12.21875 0.4375 "/></g></g></g><g fill="#353334" fill-opacity="1"><g transform="translate(315.474079, 63.986511)"><g><path d="M 22.65625 -0.78125 C 21.550781 -0.46875 20.125 -0.171875 18.375 0.109375 C 16.632812 0.390625 14.800781 0.53125 12.875 0.53125 C 10.925781 0.53125 9.300781 0.269531 8 -0.25 C 6.707031 -0.78125 5.679688 -1.519531 4.921875 -2.46875 C 4.171875 -3.414062 3.632812 -4.539062 3.3125 -5.84375 C 3 -7.15625 2.84375 -8.597656 2.84375 -10.171875 L 2.84375 -22.96875 L 9.34375 -22.96875 L 9.34375 -10.953125 C 9.34375 -8.859375 9.617188 -7.34375 10.171875 -6.40625 C 10.722656 -5.476562 11.753906 -5.015625 13.265625 -5.015625 C 13.734375 -5.015625 14.226562 -5.035156 14.75 -5.078125 C 15.28125 -5.128906 15.75 -5.179688 16.15625 -5.234375 L 16.15625 -22.96875 L 22.65625 -22.96875 Z M 22.65625 -0.78125 "/></g></g></g><g fill="#353334" fill-opacity="1"><g transform="translate(341.183044, 63.986511)"><g><path d="M 9.640625 -4.671875 C 10.835938 -4.671875 11.679688 -4.785156 12.171875 -5.015625 C 12.671875 -5.253906 12.921875 -5.707031 12.921875 -6.375 C 12.921875 -6.894531 12.597656 -7.351562 11.953125 -7.75 C 11.316406 -8.144531 10.34375 -8.585938 9.03125 -9.078125 C 8.019531 -9.453125 7.097656 -9.84375 6.265625 -10.25 C 5.429688 -10.664062 4.722656 -11.15625 4.140625 -11.71875 C 3.566406 -12.289062 3.117188 -12.96875 2.796875 -13.75 C 2.472656 -14.539062 2.3125 -15.488281 2.3125 -16.59375 C 2.3125 -18.738281 3.109375 -20.4375 4.703125 -21.6875 C 6.304688 -22.945312 8.507812 -23.578125 11.3125 -23.578125 C 12.707031 -23.578125 14.046875 -23.453125 15.328125 -23.203125 C 16.609375 -22.953125 17.625 -22.679688 18.375 -22.390625 L 17.25 -17.328125 C 16.488281 -17.585938 15.664062 -17.816406 14.78125 -18.015625 C 13.894531 -18.222656 12.894531 -18.328125 11.78125 -18.328125 C 9.75 -18.328125 8.734375 -17.765625 8.734375 -16.640625 C 8.734375 -16.367188 8.773438 -16.128906 8.859375 -15.921875 C 8.953125 -15.722656 9.128906 -15.53125 9.390625 -15.34375 C 9.648438 -15.15625 10.003906 -14.953125 10.453125 -14.734375 C 10.898438 -14.515625 11.476562 -14.273438 12.1875 -14.015625 C 13.601562 -13.492188 14.773438 -12.976562 15.703125 -12.46875 C 16.640625 -11.957031 17.378906 -11.398438 17.921875 -10.796875 C 18.460938 -10.203125 18.84375 -9.539062 19.0625 -8.8125 C 19.28125 -8.09375 19.390625 -7.25 19.390625 -6.28125 C 19.390625 -4.007812 18.535156 -2.289062 16.828125 -1.125 C 15.128906 0.03125 12.722656 0.609375 9.609375 0.609375 C 7.566406 0.609375 5.867188 0.429688 4.515625 0.078125 C 3.160156 -0.265625 2.222656 -0.550781 1.703125 -0.78125 L 2.796875 -6.0625 C 3.898438 -5.625 5.035156 -5.28125 6.203125 -5.03125 C 7.367188 -4.789062 8.515625 -4.671875 9.640625 -4.671875 Z M 9.640625 -4.671875 "/></g></g></g><g fill="#353334" fill-opacity="1"><g transform="translate(362.352547, 63.986511)"><g><path d="M 9.5625 0 L 3.0625 0 L 3.0625 -22.96875 L 9.5625 -22.96875 Z M 10.171875 -29.59375 C 10.171875 -28.40625 9.785156 -27.46875 9.015625 -26.78125 C 8.242188 -26.09375 7.332031 -25.75 6.28125 -25.75 C 5.238281 -25.75 4.332031 -26.09375 3.5625 -26.78125 C 2.789062 -27.46875 2.40625 -28.40625 2.40625 -29.59375 C 2.40625 -30.789062 2.789062 -31.726562 3.5625 -32.40625 C 4.332031 -33.09375 5.238281 -33.4375 6.28125 -33.4375 C 7.332031 -33.4375 8.242188 -33.09375 9.015625 -32.40625 C 9.785156 -31.726562 10.171875 -30.789062 10.171875 -29.59375 Z M 10.171875 -29.59375 "/></g></g></g><g clip-path="url(#aa238ce2e7)"><g clip-path="url(#f8e4826a2c)"><g transform="matrix(1, 0, 0, 1, 0, 0)"><g clip-path="url(#2f03420f8f)"><g clip-path="url(#7ec59f70fd)"><g clip-path="url(#8b26d4ef24)"><path fill="#28abe7" d="M 0 0.894531 L 95.214844 0.894531 L 95.214844 96.105469 L 0 96.105469 Z M 0 0.894531 " fill-opacity="1" fill-rule="nonzero"/></g></g></g></g></g></g><g clip-path="url(#4c44b8f854)"><g clip-path="url(#9b153f40ab)"><g transform="matrix(1, 0, 0, 1, 12, 14)"><g clip-path="url(#2be0aefdc5)"><g clip-path="url(#df760ec4d3)"><g clip-path="url(#e4cd6c72d3)"><path fill="#353334" d="M 0.640625 0.609375 L 27.398438 0.609375 L 27.398438 45.761719 L 0.640625 45.761719 Z M 0.640625 0.609375 " fill-opacity="1" fill-rule="nonzero"/></g></g></g></g></g></g><g clip-path="url(#1019a9daf0)"><g clip-path="url(#54426e43be)"><g transform="matrix(1, 0, 0, 1, 35, 14)"><g clip-path="url(#9431234fda)"><g clip-path="url(#0a83026e77)"><g clip-path="url(#3b597e8490)"><path fill="#353334" d="M 0.792969 0.609375 L 19.09375 0.609375 L 19.09375 45.785156 L 0.792969 45.785156 Z M 0.792969 0.609375 " fill-opacity="1" fill-rule="nonzero"/></g></g></g></g></g></g><g clip-path="url(#b33db08909)"><g clip-path="url(#bdfdde8055)"><g transform="matrix(1, 0, 0, 1, 64, 37)"><g clip-path="url(#1901b51e71)"><g clip-path="url(#78c941d1bc)"><g clip-path="url(#1119104ebe)"><path fill="#353334" d="M 0.234375 0.203125 L 18.574219 0.203125 L 18.574219 45.40625 L 0.234375 45.40625 Z M 0.234375 0.203125 " fill-opacity="1" fill-rule="nonzero"/></g></g></g></g></g></g><g clip-path="url(#1eb817ccfe)"><g clip-path="url(#67187c9e44)"><g transform="matrix(1, 0, 0, 1, 49, 14)"><g clip-path="url(#9215d7c472)"><g clip-path="url(#7fcb136d5b)"><g clip-path="url(#668f322143)"><path fill="#ffffff" d="M 0.171875 0.609375 L 13.550781 0.609375 L 13.550781 45.816406 L 0.171875 45.816406 Z M 0.171875 0.609375 " fill-opacity="1" fill-rule="nonzero"/></g></g></g></g></g></g><g clip-path="url(#9e156bd900)"><g clip-path="url(#a92b9d2389)"><g transform="matrix(1, 0, 0, 1, 55, 37)"><g clip-path="url(#374e3828d2)"><g clip-path="url(#6774ba9902)"><g clip-path="url(#4a33020687)"><path fill="#ffffff" d="M 0.863281 0.203125 L 14.242188 0.203125 L 14.242188 45.410156 L 0.863281 45.410156 Z M 0.863281 0.203125 " fill-opacity="1" fill-rule="nonzero"/></g></g></g></g></g></g></g></g></svg>
+      <span class="wordmark-tag">Poultry Simulation Tools</span>
+    </div>
+    <span class="eyebrow">Decision Cost Calculator</span>
+    <h1>Berapa uang yang hilang dari <span class="accent">kandang Anda</span> hari ini?</h1>
+    <p class="header-lede">Masukkan angka kandang Anda. Kami hitung kerugian aktual dari 4 titik yang tidak terlihat tanpa data.</p>
+  </div>
+</header>
+
+<!-- ══ CONTAINER ══ -->
+<div class="container">
+
+  <nav class="tab-nav">
+    <button class="tab-btn active" data-tab="profile" onclick="switchTab('profile', event)">
+      <span class="tab-num">01</span>Profil Kandang
+    </button>
+    <button class="tab-btn" data-tab="loss" onclick="switchTab('loss', event)">
+      <span class="tab-num">02</span>Estimasi Kerugian
+    </button>
+    <button class="tab-btn" data-tab="price" onclick="switchTab('price', event)">
+      <span class="tab-num">03</span>Harga Sistem
+    </button>
+    <button class="tab-btn" data-tab="compare" onclick="switchTab('compare', event)">
+      <span class="tab-num">04</span>Perbandingan & Kelayakan
+    </button>
+  </nav>
+
+  <!-- ══ TAB 1: PROFIL ══ -->
+  <section class="panel active" id="tab-profile">
+    <div class="section-head">
+      <span class="eyebrow">Section 01 — Baseline</span>
+      <h2>Atur profil operasional kandang Anda.</h2>
+      <p class="lede">Parameter ini akan menjadi dasar perhitungan estimasi kerugian dan analisa kelayakan investasi sistem di tab berikutnya. Geser sesuai kondisi kandang Anda saat ini.</p>
+    </div>
+
+    <div class="card">
+      <div class="card-head">
+        <div class="card-title"><span class="diamond">◆</span>Skala dan struktur kandang</div>
+      </div>
+
+      <div class="slider-row">
+        <span class="slider-label">Total populasi layer aktif</span>
+        <input type="range" id="pop" min="10000" max="200000" step="1000" value="30000" oninput="update()">
+        <span class="slider-value" id="pop-v">30.000 ekor</span>
+      </div>
+      <div class="slider-row">
+        <span class="slider-label">Jumlah kandang terpisah</span>
+        <input type="range" id="kandang" min="2" max="10" step="1" value="3" oninput="update()">
+        <span class="slider-value" id="kandang-v">3 kandang</span>
+      </div>
+      <div class="slider-row">
+        <span class="slider-label">HD rata-rata saat ini</span>
+        <input type="range" id="hdp" min="60" max="95" step="1" value="80" oninput="update()">
+        <span class="slider-value" id="hdp-v">80%</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head">
+        <div class="card-title"><span class="diamond">◆</span>Harga pokok dan jual</div>
+      </div>
+
+      <div class="slider-row">
+        <span class="slider-label">Harga jual telur (Rp/kg)</span>
+        <input type="range" id="hegg" min="20000" max="34000" step="500" value="27000" oninput="update()">
+        <span class="slider-value" id="hegg-v">Rp 27.000</span>
+      </div>
+      <div class="slider-row">
+        <span class="slider-label">Harga pakan layer (Rp/kg)</span>
+        <input type="range" id="hpakan" min="5000" max="11000" step="100" value="8500" oninput="update()">
+        <span class="slider-value" id="hpakan-v">Rp 8.500</span>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="section-head">
+      <span class="eyebrow">Output baseline</span>
+      <h2>Estimasi performa bulanan.</h2>
+    </div>
+
+    <div class="stat-grid">
+      <div class="stat-card">
+        <div class="l">Produksi telur</div>
+        <div class="n" id="b-prod">—</div>
+        <div class="s">kg per bulan</div>
+      </div>
+      <div class="stat-card">
+        <div class="l">Konsumsi pakan</div>
+        <div class="n" id="b-feed">—</div>
+        <div class="s">kg per bulan</div>
+      </div>
+      <div class="stat-card">
+        <div class="l">Pendapatan kotor</div>
+        <div class="n blue" id="b-rev">—</div>
+        <div class="s">Rp per bulan</div>
+      </div>
+      <div class="stat-card">
+        <div class="l">Biaya pakan</div>
+        <div class="n" id="b-fcost">—</div>
+        <div class="s">Rp per bulan</div>
+      </div>
+    </div>
+
+    <button class="formula-toggle" onclick="toggleFormula(this, 'fmt-baseline')">
+      Lihat cara perhitungan baseline <span class="arrow">▼</span>
+    </button>
+    <div class="formula-body" id="fmt-baseline">
+      <div class="formula-inner">
+        <div class="formula-legend">
+          <span class="l-input">Input Anda</span>
+          <span class="l-assumption">Standar industri</span>
+          <span class="l-result">Hasil hitungan</span>
+        </div>
+
+        <div class="formula-step">
+          <div class="step-label">Step 1 — Produksi telur per bulan</div>
+          <div class="step-desc">Berapa kg telur yang dihasilkan kandang Anda setiap bulan.</div>
+          <div class="formula-line" id="fmt-b-prod-formula">—</div>
+          <div class="formula-line result" id="fmt-b-prod-result">—</div>
+        </div>
+
+        <div class="formula-step">
+          <div class="step-label">Step 2 — Konsumsi pakan per bulan</div>
+          <div class="step-desc">Berapa kg pakan yang dikonsumsi seluruh populasi setiap bulan.</div>
+          <div class="formula-line" id="fmt-b-feed-formula">—</div>
+          <div class="formula-line result" id="fmt-b-feed-result">—</div>
+        </div>
+
+        <div class="formula-step">
+          <div class="step-label">Step 3 — Pendapatan kotor</div>
+          <div class="step-desc">Total nilai telur yang dijual sebelum dikurangi biaya apapun.</div>
+          <div class="formula-line" id="fmt-b-rev-formula">—</div>
+          <div class="formula-line result" id="fmt-b-rev-result">—</div>
+        </div>
+
+        <div class="formula-step">
+          <div class="step-label">Step 4 — Biaya pakan</div>
+          <div class="step-desc">Total biaya pakan untuk seluruh konsumsi bulanan.</div>
+          <div class="formula-line" id="fmt-b-fcost-formula">—</div>
+          <div class="formula-line result" id="fmt-b-fcost-result">—</div>
+        </div>
+      </div>
+    </div>
+
+    <p style="font-size:13px; color:var(--fg-3); margin-top: var(--space-5); line-height: 1.6;">
+      Konsumsi pakan menggunakan asumsi standar industri 110 g/ekor/hari untuk layer komersial. Berat telur dihitung pada 60 g/butir.
+    </p>
+  </section>
+
+  <!-- ══ TAB 2: KERUGIAN ══ -->
+  <section class="panel" id="tab-loss">
+    <div class="section-head">
+      <span class="eyebrow">Section 02 — Hidden costs</span>
+      <h2>Empat sumber kerugian yang sulit terlihat tanpa data terstruktur.</h2>
+      <p class="lede">Operasi kandang yang disiplin sudah menangani banyak hal secara visual. Namun empat hal di bawah ini butuh agregasi data lintas waktu dan lintas kandang — di sinilah sistem memberi nilai. Geser sesuai estimasi kondisi Anda.</p>
+    </div>
+
+    <!-- LOSS 1: AFKIR -->
+    <div class="card">
+      <div class="card-head">
+        <div>
+          <div class="card-title"><span class="diamond">◆</span>Afkir tertunda</div>
+          <div class="card-sub">Ayam tua yang produksinya sudah di bawah ekonomis tapi belum diafkir = pakan yang lebih besar dari nilai telur yang dihasilkan.</div>
+        </div>
+      </div>
+
+      <div class="slider-preamble">
+        Bayangkan ada <strong id="afkir-narrative-ekor">1.500 ekor</strong> di kandang Bapak/Ibu yang sebenarnya sudah waktunya diafkir, tapi masih terus diberi makan. Pengeluaran untuk pakan mereka tidak lagi sebanding dengan telur yang dihasilkan — selisih inilah yang kami hitung di bawah.
+      </div>
+
+      <div class="slider-row">
+        <span class="slider-label">Jumlah ekor yang telat diafkir</span>
+        <input type="range" id="afkir-ekor" min="0" max="30000" step="100" value="1500" oninput="update()">
+        <span class="slider-value" id="afkir-ekor-v">1.500 ekor</span>
+      </div>
+      <div class="slider-row">
+        <span class="slider-label">Lag deteksi sampai keputusan afkir (hari)</span>
+        <input type="range" id="afkir-lag" min="1" max="30" step="1" value="14" oninput="update()">
+        <span class="slider-value" id="afkir-lag-v">14 hari</span>
+      </div>
+
+      <div class="inline-output">
+        <span class="l">Kerugian terakumulasi selama lag</span>
+        <span class="n danger" id="loss-afkir-monthly">—</span>
+        <span class="extra" id="loss-afkir-extra">—</span>
+      </div>
+
+      <button class="formula-toggle" onclick="toggleFormula(this, 'fmt-afkir')">
+        Lihat cara perhitungan <span class="arrow">▼</span>
+      </button>
+      <div class="formula-body" id="fmt-afkir">
+        <div class="formula-inner">
+          <div class="formula-legend">
+            <span class="l-input">Input Anda</span>
+            <span class="l-assumption">Standar industri</span>
+            <span class="l-result">Hasil hitungan</span>
+          </div>
+
+          <div class="formula-step">
+            <div class="step-label">Step 1 — Pakan yang dikonsumsi ayam telat afkir per hari</div>
+            <div class="step-desc">Konsumsi pakan standar layer × jumlah ekor × harga pakan.</div>
+            <div class="formula-line" id="fmt-afkir-1-formula">—</div>
+            <div class="formula-line result" id="fmt-afkir-1-result">—</div>
+          </div>
+
+          <div class="formula-step">
+            <div class="step-label">Step 2 — Telur yang masih dihasilkan ayam tua per hari</div>
+            <div class="step-desc">Ayam siap afkir biasanya HD-nya turun ke sekitar 50% — nilai telur yang masih dihasilkan.</div>
+            <div class="formula-line" id="fmt-afkir-2-formula">—</div>
+            <div class="formula-line result" id="fmt-afkir-2-result">—</div>
+          </div>
+
+          <div class="formula-step">
+            <div class="step-label">Step 3 — Kerugian bersih per hari</div>
+            <div class="step-desc">Selisih biaya pakan dengan nilai telur — pakan yang dibayarkan tapi tidak menghasilkan nilai setara.</div>
+            <div class="formula-line" id="fmt-afkir-3-formula">—</div>
+            <div class="formula-line result" id="fmt-afkir-3-result">—</div>
+          </div>
+
+          <div class="formula-step">
+            <div class="step-label">Step 4 — Total kerugian selama lag deteksi</div>
+            <div class="step-desc">Kerugian harian × jumlah hari sampai keputusan afkir diambil.</div>
+            <div class="formula-line" id="fmt-afkir-4-formula">—</div>
+            <div class="formula-line result" id="fmt-afkir-4-result">—</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- LOSS 2: PERFORMA ANTAR KANDANG (HD) -->
+    <div class="card">
+      <div class="card-head">
+        <div>
+          <div class="card-title"><span class="diamond">◆</span>Performa antar kandang tidak terdeteksi (HD)</div>
+          <div class="card-sub">Kalau ada 1 kandang yang HD-nya konsisten lebih rendah dari kandang lain, tanpa pencatatan harian per-kandang sulit diketahui penyebabnya, apalagi diperbaiki.</div>
+        </div>
+      </div>
+
+      <div class="slider-preamble">
+        Perbandingan ini dihitung untuk kandang <strong>dalam generasi ayam yang sama</strong> (umur produktif setara). HD ayam pada umur berbeda secara natural akan berada di angka yang berbeda — yang menjadi indikator masalah adalah selisih HD pada umur yang sama, bukan selisih lintas umur.
+      </div>
+
+      <div class="slider-row">
+        <span class="slider-label">Selisih HD antara kandang terbaik &amp; terburuk</span>
+        <input type="range" id="gap-hd" min="0" max="15" step="1" value="7" oninput="update()">
+        <span class="slider-value" id="gap-hd-v">7%</span>
+      </div>
+      <div class="slider-row">
+        <span class="slider-label">Lag deteksi gap performa (hari)</span>
+        <input type="range" id="hd-lag" min="1" max="30" step="1" value="14" oninput="update()">
+        <span class="slider-value" id="hd-lag-v">14 hari</span>
+      </div>
+
+      <div class="inline-output">
+        <span class="l">Kerugian terakumulasi selama lag</span>
+        <span class="n danger" id="loss-hdgap-monthly">—</span>
+        <span class="extra">Kerugian dari produksi telur yang hilang di 1 kandang underperform.</span>
+      </div>
+
+      <button class="formula-toggle" onclick="toggleFormula(this, 'fmt-hdgap')">
+        Lihat cara perhitungan <span class="arrow">▼</span>
+      </button>
+      <div class="formula-body" id="fmt-hdgap">
+        <div class="formula-inner">
+          <div class="formula-legend">
+            <span class="l-input">Input Anda</span>
+            <span class="l-assumption">Standar industri</span>
+            <span class="l-result">Hasil hitungan</span>
+          </div>
+
+          <div class="formula-step">
+            <div class="step-label">Step 1 — Populasi per kandang</div>
+            <div class="step-desc">Kerugian dihitung dari satu kandang yang underperform.</div>
+            <div class="formula-line" id="fmt-hd-1-formula">—</div>
+            <div class="formula-line result" id="fmt-hd-1-result">—</div>
+          </div>
+
+          <div class="formula-step">
+            <div class="step-label">Step 2 — Telur yang hilang per hari dari kandang underperform</div>
+            <div class="step-desc">Selisih HD × populasi kandang × berat telur.</div>
+            <div class="formula-line" id="fmt-hd-2-formula">—</div>
+            <div class="formula-line result" id="fmt-hd-2-result">—</div>
+          </div>
+
+          <div class="formula-step">
+            <div class="step-label">Step 3 — Nilai telur yang hilang per hari</div>
+            <div class="step-desc">Kg telur hilang × harga jual telur.</div>
+            <div class="formula-line" id="fmt-hd-3-formula">—</div>
+            <div class="formula-line result" id="fmt-hd-3-result">—</div>
+          </div>
+
+          <div class="formula-step">
+            <div class="step-label">Step 4 — Total kerugian selama lag deteksi</div>
+            <div class="step-desc">Kerugian harian × jumlah hari sampai gap teridentifikasi.</div>
+            <div class="formula-line" id="fmt-hd-4-formula">—</div>
+            <div class="formula-line result" id="fmt-hd-4-result">—</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- LOSS 3: FCR ANTAR KANDANG -->
+    <div class="card">
+      <div class="card-head">
+        <div>
+          <div class="card-title"><span class="diamond">◆</span>FCR antar kandang tidak terdeteksi</div>
+          <div class="card-sub">Konsumsi pakan per kg telur bervariasi antar kandang karena banyak faktor (DOC, brooding, suhu, kepadatan). Tanpa catatan harian, sulit pinpoint kandang mana yang inefisien.</div>
+        </div>
+      </div>
+
+      <div class="slider-preamble">
+        Sama seperti HD, perbandingan FCR ini berlaku untuk kandang <strong>dalam generasi ayam yang sama</strong>. Kandang dengan umur ayam berbeda akan menghasilkan FCR yang berbeda secara natural — yang relevan adalah selisih FCR pada umur yang sama.
+      </div>
+
+      <div class="slider-row">
+        <span class="slider-label">Selisih FCR antara kandang terbaik &amp; terburuk</span>
+        <input type="range" id="gap-fcr" min="0" max="0.5" step="0.05" value="0.10" oninput="update()">
+        <span class="slider-value" id="gap-fcr-v">+0,10</span>
+      </div>
+      <div class="slider-row">
+        <span class="slider-label">Lag deteksi gap FCR (hari)</span>
+        <input type="range" id="fcr-lag" min="1" max="30" step="1" value="14" oninput="update()">
+        <span class="slider-value" id="fcr-lag-v">14 hari</span>
+      </div>
+
+      <div class="inline-output">
+        <span class="l">Kerugian terakumulasi selama lag</span>
+        <span class="n danger" id="loss-fcrgap-monthly">—</span>
+        <span class="extra">Pakan ekstra yang terbuang di kandang dengan FCR lebih tinggi.</span>
+      </div>
+
+      <button class="formula-toggle" onclick="toggleFormula(this, 'fmt-fcrgap')">
+        Lihat cara perhitungan <span class="arrow">▼</span>
+      </button>
+      <div class="formula-body" id="fmt-fcrgap">
+        <div class="formula-inner">
+          <div class="formula-legend">
+            <span class="l-input">Input Anda</span>
+            <span class="l-assumption">Standar industri</span>
+            <span class="l-result">Hasil hitungan</span>
+          </div>
+
+          <div class="formula-step">
+            <div class="step-label">Step 1 — Produksi telur per hari per kandang</div>
+            <div class="step-desc">Berapa kg telur yang dihasilkan kandang underperform per hari.</div>
+            <div class="formula-line" id="fmt-fcr-1-formula">—</div>
+            <div class="formula-line result" id="fmt-fcr-1-result">—</div>
+          </div>
+
+          <div class="formula-step">
+            <div class="step-label">Step 2 — Pakan ekstra per hari karena FCR lebih tinggi</div>
+            <div class="step-desc">FCR adalah rasio pakan : telur. Selisih FCR × produksi telur = pakan ekstra terbuang.</div>
+            <div class="formula-line" id="fmt-fcr-2-formula">—</div>
+            <div class="formula-line result" id="fmt-fcr-2-result">—</div>
+          </div>
+
+          <div class="formula-step">
+            <div class="step-label">Step 3 — Nilai pakan ekstra per hari</div>
+            <div class="step-desc">Kg pakan ekstra × harga pakan.</div>
+            <div class="formula-line" id="fmt-fcr-3-formula">—</div>
+            <div class="formula-line result" id="fmt-fcr-3-result">—</div>
+          </div>
+
+          <div class="formula-step">
+            <div class="step-label">Step 4 — Total kerugian selama lag deteksi</div>
+            <div class="step-desc">Kerugian harian × jumlah hari sampai gap teridentifikasi.</div>
+            <div class="formula-line" id="fmt-fcr-4-formula">—</div>
+            <div class="formula-line result" id="fmt-fcr-4-result">—</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- LOSS 4: OVERSTOCKING (toggle + 3 concrete sliders, no lag) -->
+    <div class="card">
+      <div class="card-head">
+        <div>
+          <div class="card-title"><span class="diamond">◆</span>Overstocking pakan, vitamin &amp; obat</div>
+          <div class="card-sub">Pembelian reaktif tanpa forecast = pakan/obat kedaluwarsa, vitamin terdegradasi, modal kerja tertahan di gudang.</div>
+        </div>
+      </div>
+
+      <label class="toggle-card" for="over-toggle" style="margin-top: 0; margin-bottom: var(--space-5);">
+        <input type="checkbox" id="over-toggle" class="toggle-checkbox" checked onchange="update()">
+        <div class="toggle-text">
+          <div class="t1">Apakah Bapak/Ibu pernah mengalami overstocking?</div>
+          <div class="t2">Nonaktifkan jika operasi Anda tidak pernah mengalami pakan/obat basi dan tidak ada modal kerja tertahan di stok.</div>
+        </div>
+      </label>
+
+      <div id="over-inputs">
+        <div class="slider-row">
+          <span class="slider-label">Frekuensi kejadian pakan/obat basi per tahun</span>
+          <input type="range" id="over-freq" min="0" max="12" step="1" value="3" oninput="update()">
+          <span class="slider-value" id="over-freq-v">3 kali/tahun</span>
+        </div>
+        <div class="slider-row">
+          <span class="slider-label">Nilai rata-rata per kejadian (Rp)</span>
+          <input type="range" id="over-value" min="0" max="15000000" step="500000" value="5000000" oninput="update()">
+          <span class="slider-value" id="over-value-v">Rp 5.000.000</span>
+        </div>
+        <div class="slider-row">
+          <span class="slider-label">Modal kerja tertahan di stok (Rp)</span>
+          <input type="range" id="over-modal" min="0" max="100000000" step="5000000" value="30000000" oninput="update()">
+          <span class="slider-value" id="over-modal-v">Rp 30.000.000</span>
+        </div>
+      </div>
+
+      <div class="inline-output">
+        <span class="l">Kerugian rata-rata per bulan</span>
+        <span class="n danger" id="loss-over-monthly">—</span>
+        <span class="extra">Total kerugian setahun dibagi 12 bulan untuk mendapatkan rata-rata bulanan.</span>
+      </div>
+
+      <button class="formula-toggle" onclick="toggleFormula(this, 'fmt-over')">
+        Lihat cara perhitungan <span class="arrow">▼</span>
+      </button>
+      <div class="formula-body" id="fmt-over">
+        <div class="formula-inner">
+          <div class="formula-legend">
+            <span class="l-input">Input Anda</span>
+            <span class="l-assumption">Standar industri</span>
+            <span class="l-result">Hasil hitungan</span>
+          </div>
+
+          <div class="formula-step">
+            <div class="step-label">Komponen A — Kerugian langsung pakan/obat basi (per tahun)</div>
+            <div class="step-desc">Frekuensi kejadian × nilai rata-rata per kejadian.</div>
+            <div class="formula-line" id="fmt-over-1-formula">—</div>
+            <div class="formula-line result" id="fmt-over-1-result">—</div>
+          </div>
+
+          <div class="formula-step">
+            <div class="step-label">Komponen B — Opportunity cost modal kerja tertahan (per tahun)</div>
+            <div class="step-desc">Modal yang tertahan di stok kehilangan kesempatan untuk diputarkan ke aktivitas produktif lain. Cost of capital UMKM 12% per tahun.</div>
+            <div class="formula-line" id="fmt-over-2-formula">—</div>
+            <div class="formula-line result" id="fmt-over-2-result">—</div>
+          </div>
+
+          <div class="formula-step">
+            <div class="step-label">Total kerugian rata-rata per bulan</div>
+            <div class="step-desc">(Komponen A + Komponen B) ÷ 12 bulan.</div>
+            <div class="formula-line" id="fmt-over-3-formula">—</div>
+            <div class="formula-line result" id="fmt-over-3-result">—</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TOTAL LOSS BOX -->
+    <div class="total-loss-box">
+      <span class="eyebrow">Total kerugian selama lag deteksi</span>
+      <div class="grid">
+        <div>
+          <div class="label-l">Akumulasi dari 4 sumber</div>
+          <div class="big" id="total-loss-monthly">—</div>
+          <div class="sub">total kerugian yang sudah terjadi selama window lag deteksi</div>
+        </div>
+        <div>
+          <div class="label-l">Kerugian harian rata-rata</div>
+          <div class="big" id="total-loss-annual">—</div>
+          <div class="sub">kerugian per hari dari 4 sumber gabungan</div>
+        </div>
+      </div>
+      <div class="note">
+        Angka ini adalah <strong style="color:#fff;">kerugian yang sudah terjadi dan tidak dapat ditagih kembali</strong> — pakan terbuang sudah dimakan, telur yang hilang tidak akan kembali, modal yang tertahan kehilangan kesempatan. Tanpa visibility data, lag deteksi seperti ini terus berulang.
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head">
+        <div class="card-title"><span class="diamond">◆</span>Komposisi kerugian</div>
+        <div class="card-sub">Mana yang paling berat di operasi Anda?</div>
+      </div>
+      <div class="bar-list" id="loss-bars"></div>
+    </div>
+  </section>
+
+  <!-- ══ TAB 3: HARGA SISTEM ══ -->
+  <section class="panel" id="tab-price">
+    <div class="section-head">
+      <span class="eyebrow">Section 03 — Transparent pricing</span>
+      <h2>Harga sistem kami, lengkap tanpa penutup.</h2>
+      <p class="lede">Pricing dihitung berdasarkan skala operasi Bapak/Ibu — bukan flat untuk semua ukuran. Anda bisa edit tarif di bawah jika ingin simulasikan paket berbeda. Default mengikuti tarif standar Unitek.</p>
+    </div>
+
+    <div class="card">
+      <div class="card-head">
+        <div class="card-title"><span class="diamond">◆</span>Tarif yang berlaku</div>
+        <div class="card-sub">Dapat diedit untuk simulasi</div>
+      </div>
+
+      <div class="slider-row">
+        <span class="slider-label">Tarif per ekor populasi (Rp/bulan)</span>
+        <input type="number" class="num-input" id="rate-ekor" min="50" max="200" value="110" oninput="update()" style="width: 100%; max-width: 280px; justify-self: stretch;">
+        <span class="slider-value" id="rate-ekor-v">Rp 110</span>
+      </div>
+      <div class="slider-row">
+        <span class="slider-label">Tarif per butir telur produksi (Rp/butir)</span>
+        <input type="number" class="num-input" id="rate-butir" min="5" max="30" value="10" oninput="update()" style="width: 100%; max-width: 280px; justify-self: stretch;">
+        <span class="slider-value" id="rate-butir-v">Rp 10</span>
+      </div>
+      <div class="slider-row">
+        <span class="slider-label">Implementasi awal (one-time)</span>
+        <input type="number" class="num-input" id="impl-cost" min="0" step="500000" value="10000000" oninput="update()" style="width: 100%; max-width: 280px; justify-self: stretch;">
+        <span class="slider-value" id="impl-cost-v">Rp 10.000.000</span>
+      </div>
+
+      <p class="note">
+        Implementasi mencakup: konfigurasi sistem, migrasi data awal, training mandor &amp; admin (2 sesi), serta dukungan go-live 30 hari pertama. Setelah go-live, support berkelanjutan termasuk dalam biaya bulanan.
+      </p>
+    </div>
+
+    <!-- BREAKDOWN TABLE -->
+    <div class="card">
+      <div class="card-head">
+        <div class="card-title"><span class="diamond">◆</span>Rincian biaya bulanan</div>
+        <div class="card-sub">Berdasarkan profil di Tab 01</div>
+      </div>
+
+      <table class="price-table">
+        <thead>
+          <tr>
+            <th>Komponen</th>
+            <th style="text-align:right">Hitungan</th>
+            <th style="text-align:right">Subtotal</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Biaya per ekor</td>
+            <td class="num" id="price-ekor-calc">—</td>
+            <td class="num" id="price-ekor-sub">—</td>
+          </tr>
+          <tr>
+            <td>Biaya per butir telur</td>
+            <td class="num" id="price-butir-calc">—</td>
+            <td class="num" id="price-butir-sub">—</td>
+          </tr>
+          <tr class="total">
+            <td>Total per bulan</td>
+            <td></td>
+            <td class="num" id="price-monthly-total">—</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- ANNUAL PREPAY TOGGLE -->
+    <label class="toggle-card" for="prepay-toggle">
+      <input type="checkbox" id="prepay-toggle" class="toggle-checkbox" onchange="update()">
+      <div class="toggle-text">
+        <div class="t1">Bayar 1 tahun di muka — diskon 50%</div>
+        <div class="t2">Komitmen tahunan dengan potongan setengah harga, dibayar di awal masa kontrak.</div>
+      </div>
+    </label>
+
+    <!-- SAVING DISPLAY (shows when toggle on) -->
+    <div class="saving-display" id="saving-display">
+      <div class="label-up">Yang Anda hemat</div>
+      <div class="save-num" id="save-amount">—</div>
+      <div class="save-desc">
+        Dengan komitmen pembayaran tahunan di muka, Anda menghemat setengah dari nilai langganan setahun.
+        Cocok untuk Bapak/Ibu yang yakin sistem ini akan dipakai jangka panjang.
+      </div>
+    </div>
+
+    <!-- ANNUAL VS MONTHLY COMPARISON -->
+    <div class="card">
+      <div class="card-head">
+        <div class="card-title"><span class="diamond">◆</span>Perbandingan opsi pembayaran</div>
+      </div>
+
+      <table class="price-table">
+        <thead>
+          <tr>
+            <th>Opsi</th>
+            <th style="text-align:right">Nilai 1 tahun</th>
+            <th style="text-align:right">Per bulan efektif</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Bayar bulanan</td>
+            <td class="num" id="annual-monthly">—</td>
+            <td class="num" id="monthly-effective">—</td>
+          </tr>
+          <tr>
+            <td><strong>Bayar tahunan di muka (−50%)</strong></td>
+            <td class="num" id="annual-prepay">—</td>
+            <td class="num" id="prepay-effective">—</td>
+          </tr>
+          <tr class="total">
+            <td>Selisih (penghematan tahunan)</td>
+            <td></td>
+            <td class="num" id="annual-saving">—</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <p class="note" id="impl-context">—</p>
+    </div>
+  </section>
+
+  <!-- ══ TAB 4: PERBANDINGAN ══ -->
+  <section class="panel" id="tab-compare">
+    <div class="section-head">
+      <span class="eyebrow">Section 04 — Decision framework</span>
+      <h2>Berapa kerugian Anda jika tidak pakai sistem?</h2>
+      <p class="lede">Angka di bawah adalah kerugian aktual yang sedang terjadi setiap hari di operasi Anda — bukan proyeksi optimis, bukan klaim sistem. Pertanyaannya tinggal satu: berapa hari kerugian operasional yang sebanding dengan biaya sistem?</p>
+    </div>
+
+    <!-- KERUGIAN BY TIMESCALE -->
+    <div class="section-head">
+      <span class="eyebrow">Kerugian operasional</span>
+      <h2>Per hari, per bulan, per tahun.</h2>
+    </div>
+
+    <div class="stat-grid" style="grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));">
+      <div class="stat-card">
+        <div class="l">Kerugian per hari</div>
+        <div class="n danger" id="cmp-loss-day">—</div>
+        <div class="s">akumulasi 4 sumber kerugian</div>
+      </div>
+      <div class="stat-card">
+        <div class="l">Kerugian per bulan</div>
+        <div class="n danger" id="cmp-loss-month">—</div>
+        <div class="s">30 hari operasional</div>
+      </div>
+      <div class="stat-card">
+        <div class="l">Kerugian per tahun</div>
+        <div class="n danger" id="cmp-loss-year">—</div>
+        <div class="s">365 hari operasional</div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- BIAYA SISTEM SETARA -->
+    <div class="section-head">
+      <span class="eyebrow">Perbandingan langsung</span>
+      <h2>Biaya sistem setara berapa hari kerugian?</h2>
+      <p class="lede">Frame paling jujur untuk menilai investasi: berapa hari kerugian operasional sebanding dengan biaya sistem yang Anda bayarkan?</p>
+    </div>
+
+    <div class="stat-grid" style="grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));">
+      <div class="stat-card">
+        <div class="l">Biaya sistem 1 bulan setara</div>
+        <div class="n blue" id="kpi-eq-month">—</div>
+        <div class="s">hari kerugian operasional</div>
+      </div>
+      <div class="stat-card">
+        <div class="l">Biaya implementasi setara</div>
+        <div class="n blue" id="kpi-eq-impl">—</div>
+        <div class="s">hari kerugian operasional</div>
+      </div>
+      <div class="stat-card">
+        <div class="l">Biaya sistem 1 tahun setara</div>
+        <div class="n blue" id="kpi-eq-year">—</div>
+        <div class="s">hari kerugian operasional</div>
+      </div>
+    </div>
+
+    <!-- BAR COMPARE -->
+    <div class="card">
+      <div class="card-head">
+        <div class="card-title"><span class="diamond">◆</span>Visualisasi: kerugian vs biaya sistem (per bulan)</div>
+      </div>
+      <div class="bar-list" id="cmp-bars"></div>
+    </div>
+
+    <!-- VERDICT -->
+    <div class="card">
+      <div class="card-head">
+        <div class="card-title"><span class="diamond">◆</span>Kesimpulan</div>
+      </div>
+      <div id="verdict-container" style="display:flex; gap: var(--space-3); flex-wrap:wrap; margin-bottom: var(--space-5);"></div>
+      <p id="verdict-narrative" style="color:var(--fg-2); line-height:1.7;">—</p>
+    </div>
+
+    <!-- BENEFIT NON-FINANCIAL -->
+    <div class="section-head" style="margin-top:var(--space-7);">
+      <span class="eyebrow">Beyond the numbers</span>
+      <h2>Manfaat yang tidak tertangkap dalam angka.</h2>
+      <p class="lede">Selain angka kerugian operasional yang dapat dihindari, sistem juga memberikan manfaat-manfaat berikut yang sulit dikuantifikasi tapi sering menjadi alasan utama owner mengambil keputusan.</p>
+    </div>
+
+    <ul class="benefit-list">
+      <li>Knowledge tidak hilang ketika mandor senior pindah, sakit, atau pensiun. Histori operasional tersimpan permanen.</li>
+      <li>Data historis 2-3 tahun yang kredibel ketika Anda butuh ajukan kredit ke bank atau investor.</li>
+      <li>Posisi negosiasi lebih kuat dengan supplier pakan/DOC dan buyer telur — Anda tahu angka, mereka tahu Anda tahu.</li>
+      <li>Kesiapan ekspansi: kalau buka kandang ke-4 atau ke-5, SOP &amp; data benchmark sudah ada untuk replikasi cepat.</li>
+      <li>Insentif kinerja mandor berbasis data objektif (FCR, mortalitas per kandang) — bukan kesan atau loyalitas.</li>
+      <li>Successor readiness: anak atau partner bisnis bisa ambil alih operasional dengan kurva belajar yang jauh lebih landai.</li>
+    </ul>
+
+    <div style="text-align:center; margin-top: var(--space-7); padding: var(--space-7) 0; border-top: 1px solid var(--border-1);">
+      <span class="eyebrow" style="display:block; margin-bottom: var(--space-4);">Ready to discuss?</span>
+      <h2 style="font-size: 28px; font-weight: 700; letter-spacing: -0.015em; margin-bottom: var(--space-5);">Free Consultation via WhatsApp</h2>
+      <p style="color:var(--fg-2); max-width:520px; margin:0 auto var(--space-5); line-height:1.6;">
+        Jika Anda ingin angka di atas direview bersama tim kami untuk operasi Anda secara spesifik — kami senang berdiskusi tanpa biaya, tanpa komitmen.
+      </p>
+      <p style="color:var(--fg-3); font-size:13px;">
+        Unitek Solusi · Semarang · <a href="https://unitek.one" style="color:var(--brand-blue); text-decoration:none; font-weight:500;">unitek.one</a>
+      </p>
+    </div>
+  </section>
+
+</div>
+
+<footer class="footer">
+  Simulator ini menggunakan parameter standar industri layer komersial Indonesia.<br>
+  Angka bersifat estimasi untuk tujuan diskusi dan pengambilan keputusan strategis. Tidak menggantikan due diligence finansial menyeluruh.<br>
+  <span style="margin-top:var(--space-3); display:inline-block;">© Unitek Solusi · <a href="https://unitek.one">unitek.one</a></span>
+</footer>
+
+<script>
+  // ── Helpers ──
+  function fmt(n) {
+    const abs = Math.abs(n);
+    if (abs >= 1e9) return 'Rp ' + (n / 1e9).toFixed(1).replace('.', ',') + ' M';
+    if (abs >= 1e6) return 'Rp ' + (n / 1e6).toFixed(1).replace('.', ',') + ' jt';
+    if (abs >= 1e3) return 'Rp ' + Math.round(n).toLocaleString('id-ID');
+    return 'Rp ' + Math.round(n);
+  }
+  function fmtFull(n) { return 'Rp ' + Math.round(n).toLocaleString('id-ID'); }
+  function fmtNum(n) { return Math.round(n).toLocaleString('id-ID'); }
+  function fmtKg(n) { return Math.round(n).toLocaleString('id-ID') + ' kg'; }
+
+  // Color span helpers for formula display
+  function vIn(text) { return `<span class="v-input">${text}</span>`; }
+  function vAs(text) { return `<span class="v-assumption">${text}</span>`; }
+  function vRe(text) { return `<span class="v-result">${text}</span>`; }
+
+  // ── Tab switch ──
+  function switchTab(id, e) {
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById('tab-' + id).classList.add('active');
+    e.currentTarget.classList.add('active');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  // ── Formula toggle ──
+  function toggleFormula(btn, bodyId) {
+    const body = document.getElementById(bodyId);
+    btn.classList.toggle('open');
+    body.classList.toggle('open');
+    btn.firstChild.textContent = btn.classList.contains('open')
+      ? 'Sembunyikan perhitungan '
+      : 'Lihat cara perhitungan ';
+  }
+
+  // ── Bar renderer ──
+  function makeBars(containerId, bars) {
+    const maxVal = Math.max(...bars.map(b => Math.abs(b.val)), 1);
+    document.getElementById(containerId).innerHTML = bars.map(b => {
+      const w = Math.max(2, Math.round(Math.abs(b.val) / maxVal * 100));
+      return `
+        <div class="bar-item">
+          <div class="bar-head">
+            <span class="bar-label">${b.label}</span>
+            <span class="bar-val">${fmt(b.val)}</span>
+          </div>
+          <div class="bar-track">
+            <div class="bar-fill" style="width:${w}%; background:${b.color};"></div>
+          </div>
+        </div>`;
+    }).join('');
+  }
+
+  // ── Main update ──
+  function update() {
+    // ─── Tab 1: Profile inputs ───
+    const pop      = +document.getElementById('pop').value;
+    const kandang  = +document.getElementById('kandang').value;
+    const hdp      = +document.getElementById('hdp').value / 100;
+    const hegg     = +document.getElementById('hegg').value;
+    const hpakan   = +document.getElementById('hpakan').value;
+
+    document.getElementById('pop-v').textContent     = fmtNum(pop) + ' ekor';
+    document.getElementById('kandang-v').textContent = kandang + ' kandang';
+    document.getElementById('hdp-v').textContent     = Math.round(hdp * 100) + '%';
+    document.getElementById('hegg-v').textContent    = 'Rp ' + fmtNum(hegg);
+    document.getElementById('hpakan-v').textContent  = 'Rp ' + fmtNum(hpakan);
+
+    // Baseline calculations
+    const eggKgPerMonth = pop * hdp * 0.06 * 30;
+    const eggButirMonth = pop * hdp * 30;
+    const feedKgPerMonth = pop * 0.11 * 30;
+    const feedCost = feedKgPerMonth * hpakan;
+    const revenue = eggKgPerMonth * hegg;
+    const popPerKandang = pop / kandang;
+
+    document.getElementById('b-prod').textContent  = fmtNum(eggKgPerMonth);
+    document.getElementById('b-feed').textContent  = fmtNum(feedKgPerMonth);
+    document.getElementById('b-rev').textContent   = fmt(revenue);
+    document.getElementById('b-fcost').textContent = fmt(feedCost);
+
+    // Baseline formula display
+    document.getElementById('fmt-b-prod-formula').innerHTML =
+      `${vIn(fmtNum(pop) + ' ekor')} × ${vIn(Math.round(hdp*100) + '%')} HD × ${vAs('60 g')} (berat telur) × ${vAs('30 hari')}`;
+    document.getElementById('fmt-b-prod-result').innerHTML =
+      `= ${vRe(fmtKg(eggKgPerMonth))} per bulan`;
+
+    document.getElementById('fmt-b-feed-formula').innerHTML =
+      `${vIn(fmtNum(pop) + ' ekor')} × ${vAs('110 g/ekor/hari')} × ${vAs('30 hari')}`;
+    document.getElementById('fmt-b-feed-result').innerHTML =
+      `= ${vRe(fmtKg(feedKgPerMonth))} per bulan`;
+
+    document.getElementById('fmt-b-rev-formula').innerHTML =
+      `${vRe(fmtKg(eggKgPerMonth))} × ${vIn('Rp ' + fmtNum(hegg) + '/kg')}`;
+    document.getElementById('fmt-b-rev-result').innerHTML =
+      `= ${vRe(fmtFull(revenue))} per bulan`;
+
+    document.getElementById('fmt-b-fcost-formula').innerHTML =
+      `${vRe(fmtKg(feedKgPerMonth))} × ${vIn('Rp ' + fmtNum(hpakan) + '/kg')}`;
+    document.getElementById('fmt-b-fcost-result').innerHTML =
+      `= ${vRe(fmtFull(feedCost))} per bulan`;
+
+    // ─── Dynamic afkir slider max ───
+    const afkirSlider = document.getElementById('afkir-ekor');
+    afkirSlider.max = pop;
+    if (+afkirSlider.value > pop) afkirSlider.value = Math.round(pop * 0.05 / 100) * 100;
+
+    // ─── Tab 2: Loss inputs ───
+    const afkirEkor = +document.getElementById('afkir-ekor').value;
+    const afkirLag  = +document.getElementById('afkir-lag').value;
+    const gapHd    = +document.getElementById('gap-hd').value / 100;
+    const hdLag    = +document.getElementById('hd-lag').value;
+    const gapFcr   = +document.getElementById('gap-fcr').value;
+    const fcrLag   = +document.getElementById('fcr-lag').value;
+    const overActive = document.getElementById('over-toggle').checked;
+    const overFreq   = +document.getElementById('over-freq').value;
+    const overValue  = +document.getElementById('over-value').value;
+    const overModal  = +document.getElementById('over-modal').value;
+
+    document.getElementById('afkir-ekor-v').textContent = fmtNum(afkirEkor) + ' ekor';
+    document.getElementById('afkir-narrative-ekor').textContent = fmtNum(afkirEkor) + ' ekor';
+    document.getElementById('afkir-lag-v').textContent  = afkirLag + ' hari';
+    document.getElementById('gap-hd-v').textContent     = Math.round(gapHd*100) + '%';
+    document.getElementById('hd-lag-v').textContent     = hdLag + ' hari';
+    document.getElementById('gap-fcr-v').textContent    = '+' + gapFcr.toFixed(2).replace('.', ',');
+    document.getElementById('fcr-lag-v').textContent    = fcrLag + ' hari';
+    document.getElementById('over-freq-v').textContent  = overFreq + ' kali/tahun';
+    document.getElementById('over-value-v').textContent = 'Rp ' + fmtNum(overValue);
+    document.getElementById('over-modal-v').textContent = 'Rp ' + fmtNum(overModal);
+
+    // Disable overstocking inputs visually when toggle off
+    const overInputs = document.getElementById('over-inputs');
+    overInputs.style.opacity = overActive ? '1' : '0.4';
+    overInputs.style.pointerEvents = overActive ? 'auto' : 'none';
+
+    // ── 1) Afkir tertunda ── (daily-based)
+    const pakanLatePerDay = afkirEkor * 0.11 * hpakan;
+    const telurResidualPerDay = afkirEkor * 0.5 * 0.06 * hegg;
+    const lossAfkirPerDay = Math.max(0, pakanLatePerDay - telurResidualPerDay);
+    const lossAfkirAccumulated = lossAfkirPerDay * afkirLag;
+
+    document.getElementById('loss-afkir-monthly').textContent = fmt(lossAfkirAccumulated);
+    document.getElementById('loss-afkir-extra').textContent = afkirLag > 0
+      ? `Kerugian harian Rp ${fmtNum(lossAfkirPerDay)} × ${afkirLag} hari lag deteksi = total yang sudah hilang dan tidak dapat ditagih kembali.`
+      : 'Atur lag deteksi untuk melihat akumulasi kerugian.';
+
+    // Afkir formula display
+    const pakanKgDay = afkirEkor * 0.11;
+    const telurKgDay = afkirEkor * 0.5 * 0.06;
+    document.getElementById('fmt-afkir-1-formula').innerHTML =
+      `${vIn(fmtNum(afkirEkor) + ' ekor')} × ${vAs('110 g/ekor/hari')} × ${vIn('Rp ' + fmtNum(hpakan) + '/kg')}`;
+    document.getElementById('fmt-afkir-1-result').innerHTML =
+      `= ${vRe(fmtKg(pakanKgDay))} pakan × ${vIn('Rp ' + fmtNum(hpakan))} = ${vRe(fmtFull(pakanLatePerDay))} / hari`;
+
+    document.getElementById('fmt-afkir-2-formula').innerHTML =
+      `${vIn(fmtNum(afkirEkor) + ' ekor')} × ${vAs('50% HD residual')} × ${vAs('60 g/butir')} × ${vIn('Rp ' + fmtNum(hegg) + '/kg')}`;
+    document.getElementById('fmt-afkir-2-result').innerHTML =
+      `= ${vRe(fmtKg(telurKgDay))} telur × ${vIn('Rp ' + fmtNum(hegg))} = ${vRe(fmtFull(telurResidualPerDay))} / hari`;
+
+    document.getElementById('fmt-afkir-3-formula').innerHTML =
+      `${vRe(fmtFull(pakanLatePerDay))} − ${vRe(fmtFull(telurResidualPerDay))}`;
+    document.getElementById('fmt-afkir-3-result').innerHTML =
+      `= ${vRe(fmtFull(lossAfkirPerDay))} per hari (kerugian bersih harian)`;
+
+    document.getElementById('fmt-afkir-4-formula').innerHTML =
+      `${vRe(fmtFull(lossAfkirPerDay))} × ${vIn(afkirLag + ' hari lag')}`;
+    document.getElementById('fmt-afkir-4-result').innerHTML =
+      `= ${vRe(fmtFull(lossAfkirAccumulated))} total selama lag deteksi`;
+
+    // ── 2) Gap HD ── (daily-based, no recovery factor)
+    const eggKgLostHdDay = popPerKandang * gapHd * 0.06;
+    const lossHdPerDay = eggKgLostHdDay * hegg;
+    const lossHdAccumulated = lossHdPerDay * hdLag;
+    document.getElementById('loss-hdgap-monthly').textContent = fmt(lossHdAccumulated);
+
+    document.getElementById('fmt-hd-1-formula').innerHTML =
+      `${vIn(fmtNum(pop) + ' ekor')} ÷ ${vIn(kandang + ' kandang')}`;
+    document.getElementById('fmt-hd-1-result').innerHTML =
+      `= ${vRe(fmtNum(popPerKandang) + ' ekor/kandang')}`;
+
+    document.getElementById('fmt-hd-2-formula').innerHTML =
+      `${vRe(fmtNum(popPerKandang) + ' ekor')} × ${vIn(Math.round(gapHd*100) + '%')} (gap HD) × ${vAs('60 g/butir')}`;
+    document.getElementById('fmt-hd-2-result').innerHTML =
+      `= ${vRe(fmtKg(eggKgLostHdDay))} telur hilang/hari`;
+
+    document.getElementById('fmt-hd-3-formula').innerHTML =
+      `${vRe(fmtKg(eggKgLostHdDay))} × ${vIn('Rp ' + fmtNum(hegg) + '/kg')}`;
+    document.getElementById('fmt-hd-3-result').innerHTML =
+      `= ${vRe(fmtFull(lossHdPerDay))} per hari`;
+
+    document.getElementById('fmt-hd-4-formula').innerHTML =
+      `${vRe(fmtFull(lossHdPerDay))} × ${vIn(hdLag + ' hari lag')}`;
+    document.getElementById('fmt-hd-4-result').innerHTML =
+      `= ${vRe(fmtFull(lossHdAccumulated))} total selama lag deteksi`;
+
+    // ── 3) Gap FCR ── (daily-based, no recovery factor)
+    const eggKgKandangDay = popPerKandang * hdp * 0.06;
+    const pakanEkstraDay = eggKgKandangDay * gapFcr;
+    const lossFcrPerDay = pakanEkstraDay * hpakan;
+    const lossFcrAccumulated = lossFcrPerDay * fcrLag;
+    document.getElementById('loss-fcrgap-monthly').textContent = fmt(lossFcrAccumulated);
+
+    document.getElementById('fmt-fcr-1-formula').innerHTML =
+      `${vRe(fmtNum(popPerKandang) + ' ekor')} × ${vIn(Math.round(hdp*100) + '%')} HD × ${vAs('60 g/butir')}`;
+    document.getElementById('fmt-fcr-1-result').innerHTML =
+      `= ${vRe(fmtKg(eggKgKandangDay))} telur per hari per kandang`;
+
+    document.getElementById('fmt-fcr-2-formula').innerHTML =
+      `${vRe(fmtKg(eggKgKandangDay))} × ${vIn('+' + gapFcr.toFixed(2).replace('.', ',') + ' FCR')}`;
+    document.getElementById('fmt-fcr-2-result').innerHTML =
+      `= ${vRe(fmtKg(pakanEkstraDay))} pakan ekstra per hari`;
+
+    document.getElementById('fmt-fcr-3-formula').innerHTML =
+      `${vRe(fmtKg(pakanEkstraDay))} × ${vIn('Rp ' + fmtNum(hpakan) + '/kg')}`;
+    document.getElementById('fmt-fcr-3-result').innerHTML =
+      `= ${vRe(fmtFull(lossFcrPerDay))} per hari`;
+
+    document.getElementById('fmt-fcr-4-formula').innerHTML =
+      `${vRe(fmtFull(lossFcrPerDay))} × ${vIn(fcrLag + ' hari lag')}`;
+    document.getElementById('fmt-fcr-4-result').innerHTML =
+      `= ${vRe(fmtFull(lossFcrAccumulated))} total selama lag deteksi`;
+
+    // ── 4) Overstocking (3 concrete inputs, no lag) ──
+    // Komponen A: frekuensi × nilai per kejadian (per tahun)
+    // Komponen B: modal kerja tertahan × 12% (opportunity cost per tahun)
+    // Total per tahun ÷ 12 = rata-rata kerugian per bulan
+    // Per hari = total per tahun ÷ 365 (untuk konsumsi di Tab 4)
+    // Toggle off → semua 0
+    const overFreqEff   = overActive ? overFreq : 0;
+    const overValueEff  = overActive ? overValue : 0;
+    const overModalEff  = overActive ? overModal : 0;
+
+    const overstockBasiAnnual  = overFreqEff * overValueEff;
+    const overstockOppCostYear = overModalEff * 0.12;
+    const lossOverMonth        = (overstockBasiAnnual + overstockOppCostYear) / 12;
+    const lossOverPerDay       = (overstockBasiAnnual + overstockOppCostYear) / 365;
+
+    document.getElementById('loss-over-monthly').textContent = fmt(lossOverMonth);
+
+    document.getElementById('fmt-over-1-formula').innerHTML =
+      `${vIn(overFreqEff + ' kejadian/tahun')} × ${vIn('Rp ' + fmtNum(overValueEff) + '/kejadian')}`;
+    document.getElementById('fmt-over-1-result').innerHTML =
+      `= ${vRe(fmtFull(overstockBasiAnnual))} per tahun (pakan/obat basi)`;
+
+    document.getElementById('fmt-over-2-formula').innerHTML =
+      `${vIn('Rp ' + fmtNum(overModalEff) + ' modal tertahan')} × ${vAs('12% per tahun')}`;
+    document.getElementById('fmt-over-2-result').innerHTML =
+      `= ${vRe(fmtFull(overstockOppCostYear))} per tahun (opportunity cost)`;
+
+    document.getElementById('fmt-over-3-formula').innerHTML =
+      `( ${vRe(fmtFull(overstockBasiAnnual))} + ${vRe(fmtFull(overstockOppCostYear))} ) ÷ ${vAs('12 bulan')}`;
+    document.getElementById('fmt-over-3-result').innerHTML =
+      `= ${vRe(fmtFull(lossOverMonth))} rata-rata per bulan`;
+
+    // Total — afkir/hd/fcr pakai akumulasi (kerugian yang sudah hilang selama lag);
+    // overstocking pakai monthly rate (kerugian rutin yang sudah terjadi & berlangsung)
+    const totalLossAccumulated = lossAfkirAccumulated + lossHdAccumulated + lossFcrAccumulated + lossOverMonth;
+    // Total per hari untuk Tab 4: gabungkan loss/hari dari 4 sumber
+    const totalLossPerDay = lossAfkirPerDay + lossHdPerDay + lossFcrPerDay + lossOverPerDay;
+
+    document.getElementById('total-loss-monthly').textContent = fmt(totalLossAccumulated);
+    document.getElementById('total-loss-annual').textContent = fmt(totalLossPerDay);
+
+    // Loss bars
+    makeBars('loss-bars', [
+      { label: 'Afkir tertunda',                val: lossAfkirAccumulated, color: '#28ABE7' },
+      { label: 'Performa antar kandang (HD)',   val: lossHdAccumulated,    color: '#1794D0' },
+      { label: 'FCR antar kandang',             val: lossFcrAccumulated,   color: '#0E7AAE' },
+      { label: 'Overstocking pakan/obat',       val: lossOverMonth,        color: '#0A5F87' },
+    ]);
+
+    // ─── Tab 3: Pricing ───
+    const rateEkor  = +document.getElementById('rate-ekor').value || 0;
+    const rateButir = +document.getElementById('rate-butir').value || 0;
+    const implCost  = +document.getElementById('impl-cost').value || 0;
+
+    document.getElementById('rate-ekor-v').textContent  = 'Rp ' + fmtNum(rateEkor);
+    document.getElementById('rate-butir-v').textContent = 'Rp ' + fmtNum(rateButir);
+    document.getElementById('impl-cost-v').textContent  = 'Rp ' + fmtNum(implCost);
+
+    const priceEkorSub  = pop * rateEkor;
+    const priceButirSub = eggButirMonth * rateButir;
+    const priceMonthly  = priceEkorSub + priceButirSub;
+    const annualMonthly = priceMonthly * 12;
+    const annualPrepay  = annualMonthly * 0.5;
+    const annualSaving  = annualMonthly - annualPrepay;
+    const prepayEffectiveMonthly = annualPrepay / 12;
+
+    document.getElementById('price-ekor-calc').textContent  = fmtNum(pop) + ' × ' + fmtNum(rateEkor);
+    document.getElementById('price-ekor-sub').textContent   = fmt(priceEkorSub);
+    document.getElementById('price-butir-calc').textContent = fmtNum(eggButirMonth) + ' × ' + fmtNum(rateButir);
+    document.getElementById('price-butir-sub').textContent  = fmt(priceButirSub);
+    document.getElementById('price-monthly-total').textContent = fmt(priceMonthly);
+
+    document.getElementById('annual-monthly').textContent  = fmt(annualMonthly);
+    document.getElementById('monthly-effective').textContent = fmt(priceMonthly) + ' / bln';
+    document.getElementById('annual-prepay').textContent  = fmt(annualPrepay);
+    document.getElementById('prepay-effective').textContent = fmt(prepayEffectiveMonthly) + ' / bln';
+    document.getElementById('annual-saving').textContent  = fmt(annualSaving);
+
+    // Toggle prepay display
+    const prepayChecked = document.getElementById('prepay-toggle').checked;
+    const savingDisplay = document.getElementById('saving-display');
+    if (prepayChecked) {
+      savingDisplay.classList.add('show');
+      document.getElementById('save-amount').textContent = fmt(annualSaving);
+    } else {
+      savingDisplay.classList.remove('show');
+    }
+
+    // Implementasi context
+    const dailyRevenue = revenue / 30;
+    const implEqDays = dailyRevenue > 0 ? (implCost / dailyRevenue).toFixed(1).replace('.', ',') : '—';
+    document.getElementById('impl-context').textContent =
+      `Sebagai konteks: biaya implementasi ${fmtFull(implCost)} setara dengan ${implEqDays} hari pendapatan kotor operasi Anda saat ini.`;
+
+    const effectiveMonthlyCost = prepayChecked ? prepayEffectiveMonthly : priceMonthly;
+
+    // ─── Tab 4: Decision framework — actual loss focus ───
+    // Loss by timescale (using daily rate × time)
+    const lossPerMonth = totalLossPerDay * 30;
+    const lossPerYear  = totalLossPerDay * 365;
+
+    document.getElementById('cmp-loss-day').textContent   = fmt(totalLossPerDay);
+    document.getElementById('cmp-loss-month').textContent = fmt(lossPerMonth);
+    document.getElementById('cmp-loss-year').textContent  = fmt(lossPerYear);
+
+    // System cost equivalence — biaya sistem setara berapa hari kerugian
+    const daysEqSystemMonth = totalLossPerDay > 0 ? effectiveMonthlyCost / totalLossPerDay : 0;
+    const daysEqImpl        = totalLossPerDay > 0 ? implCost / totalLossPerDay : 0;
+    const daysEqSystemYear  = totalLossPerDay > 0 ? (effectiveMonthlyCost * 12) / totalLossPerDay : 0;
+
+    document.getElementById('kpi-eq-month').textContent = daysEqSystemMonth.toFixed(1).replace('.', ',') + ' hari';
+    document.getElementById('kpi-eq-impl').textContent  = daysEqImpl.toFixed(1).replace('.', ',') + ' hari';
+    document.getElementById('kpi-eq-year').textContent  = daysEqSystemYear.toFixed(1).replace('.', ',') + ' hari';
+
+    // ── Verdict badges & narrative — Option B framing: hari kerugian setara biaya ──
+    const verdictContainer = document.getElementById('verdict-container');
+    let badges = '';
+    let narrative = '';
+
+    if (totalLossPerDay <= 0) {
+      badges = '<span class="verdict amber">Belum ada kerugian dimasukkan</span>';
+      narrative = 'Atur parameter di Tab 02 untuk melihat estimasi kerugian operasional Anda saat ini, lalu kembali ke tab ini untuk melihat perbandingan dengan biaya sistem.';
+    } else if (daysEqSystemMonth <= 5) {
+      badges += '<span class="verdict green">Biaya sistem 1 bulan < 5 hari kerugian</span>';
+      narrative = `Biaya sistem 1 bulan setara dengan hanya ${daysEqSystemMonth.toFixed(1).replace('.', ',')} hari kerugian operasional Anda. Artinya: dengan sistem ini bisa mencegah kerugian selama 5 hari saja per bulan, biayanya sudah tertutup penuh. Sisanya menjadi penghematan murni untuk operasi Anda.`;
+    } else if (daysEqSystemMonth <= 15) {
+      badges += '<span class="verdict green">Biaya sistem 1 bulan = 5-15 hari kerugian</span>';
+      narrative = `Biaya sistem 1 bulan setara dengan ${daysEqSystemMonth.toFixed(1).replace('.', ',')} hari kerugian operasional Anda. Selama sistem dapat mencegah lebih dari ${Math.ceil(daysEqSystemMonth)} hari kerugian per bulan, biayanya tertutup. Untuk skala operasi Anda, ini target yang sangat realistis.`;
+    } else if (daysEqSystemMonth <= 30) {
+      badges += '<span class="verdict amber">Biaya sistem 1 bulan = 15-30 hari kerugian</span>';
+      narrative = `Biaya sistem 1 bulan setara dengan ${daysEqSystemMonth.toFixed(1).replace('.', ',')} hari kerugian operasional Anda. Untuk skala ini, sistem perlu mencegah hampir seluruh kerugian harian Anda untuk break-even. Pertimbangkan benefit non-finansial di bawah, atau diskusikan paket alternatif dengan tim Unitek.`;
+    } else {
+      badges += '<span class="verdict red">Biaya sistem 1 bulan > 30 hari kerugian</span>';
+      narrative = `Biaya sistem 1 bulan setara dengan ${daysEqSystemMonth.toFixed(1).replace('.', ',')} hari kerugian operasional Anda — di atas 30 hari. Untuk skala saat ini, kami menyarankan pendekatan project-based implementation: investasi awal lebih besar (upfront), tapi biaya bulanan setelahnya jauh lebih ringan. Tim Unitek dapat membantu menentukan scope yang sesuai.`;
+    }
+
+    verdictContainer.innerHTML = badges;
+    document.getElementById('verdict-narrative').textContent = narrative;
+
+    // Compare bars (per bulan, supaya 1 timescale yang konsisten)
+    makeBars('cmp-bars', [
+      { label: 'Kerugian operasional per bulan',  val: lossPerMonth,         color: '#DC2626' },
+      { label: 'Biaya sistem per bulan',          val: effectiveMonthlyCost, color: '#333233' },
+      { label: 'Biaya implementasi (one-time)',   val: implCost,             color: '#8C8B8C' },
+    ]);
+  }
+
+  update();
+</script>
+</body>
+</html>
